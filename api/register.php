@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__ . "/db.php";
-require_once __DIR__ . "/util.php";
+require_once __DIR__ . "/services/db.php";
+require_once __DIR__ . "/services/util.php";
 
 
 // Validate the incoming request is a POST Method

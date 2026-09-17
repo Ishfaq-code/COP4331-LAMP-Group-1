@@ -13,7 +13,7 @@ function loadEnv($path = null) {
     }
 
     if ($path === null) {
-        $path = dirname(__DIR__) . '/.env';
+        $path = dirname(__DIR__, 2) . '/.env';
     }
 
     if ($path && file_exists($path)) {
