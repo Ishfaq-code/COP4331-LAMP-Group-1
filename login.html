@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create an Account</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #000080;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .register-card {
+      background: #ffffff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .register-card h2 {
+      text-align: center;
+      margin-bottom: 8px;
+      color: #333333;
+    }
+
+    .register-card p.subtitle {
+      text-align: center;
+      color: #666666;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #444444;
+      font-size: 14px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cccccc;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #0066ff;
+      box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.15);
+    }
+
+    .terms {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #555555;
+      margin-bottom: 20px;
+    }
+
+    .terms input {
+      cursor: pointer;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 12px;
+      background-color: #0066ff;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .btn-submit:hover {
+      background-color: #0052cc;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #666666;
+    }
+
+    .login-link a {
+      color: #0066ff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+
+    .alert {
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 18px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .alert-error {
+      background-color: #ffe6e6;
+      color: #cc0000;
+      border: 1px solid #ffcccc;
+    }
+
+    .alert-success {
+      background-color: #e6ffe6;
+      color: #008000;
+      border: 1px solid #ccffcc;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="register-card">
+    <h2>Register Today</h2>
+    <p class="subtitle">Please fill out everything to create your account</p>
+
+    <div id="alertMessage" class="alert"></div>
+
+    <form id="registerForm">
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input 
+          type="text" 
+          id="firstName" 
+          name="firstName" 
+          placeholder="John" 
+          required
+          autocomplete="given-name"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input 
+          type="text" 
+          id="lastName" 
+          name="lastName" 
+          placeholder="Smith" 
+          required
+          autocomplete="family-name"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="login">Username / Login</label>
+        <input 
+          type="text" 
+          id="login" 
+          name="login" 
+          placeholder="MisterJohn" 
+          required 
+          autocomplete="username"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          placeholder="Password!" 
+          minlength="8" 
+          required 
+          autocomplete="new-password"
+        >
+      </div>
+
+      <div class="terms">
+        <input type="checkbox" id="terms" name="terms" required>
+        <label for="terms">I agree to the <a href="#">Terms & Conditions</a></label>
+      </div>
+
+      <button type="submit" class="btn-submit">Sign Up</button>
+    </form>
+
+    <p class="login-link">
+      Already have an account? <a href="login.html">Log in</a>
+    </p>
+  </div>
+
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const alertBox = document.getElementById('alertMessage');
+      alertBox.style.display = 'none';
+
+      const payload = {
+        firstName: document.getElementById('firstName').value.trim(),
+        lastName: document.getElementById('lastName').value.trim(),
+        login: document.getElementById('login').value.trim(),
+        password: document.getElementById('password').value
+      };
+
+      try {
+        // Adjust relative path to point to your PHP registration endpoint file
+        const response = await fetch('register.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alertBox.className = 'alert alert-success';
+          alertBox.textContent = data.message || 'Successfully registered!';
+          alertBox.style.display = 'block';
+
+          // Optionally redirect after success
+          setTimeout(() => {
+            window.location.href = 'login.html';
+          }, 1500);
+        } else {
+          alertBox.className = 'alert alert-error';
+          alertBox.textContent = data.message || 'Registration failed.';
+          alertBox.style.display = 'block';
+        }
+      } catch (error) {
+        alertBox.className = 'alert alert-error';
+        alertBox.textContent = 'Network error or server unavailable.';
+        alertBox.style.display = 'block';
+      }
+    });
+  </script>
+
+</body>
+</html>
