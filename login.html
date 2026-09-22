@@ -159,12 +159,11 @@
 
       // Validate password format: >=8 chars, at least 1 number, at least 1 symbol
       const hasMinLength = passwordInput.length >= 8;
-      const hasNumber = /[0-9]/.test(passwordInput);
-      const hasSymbol = /[\W_]/.test(passwordInput);
+  
 
       if (!hasMinLength || !hasNumber || !hasSymbol) {
         alertBox.className = 'alert alert-error';
-        alertBox.textContent = 'Password must be at least 8 characters long and contain at least 1 number and 1 symbol.';
+        alertBox.textContent = 'Password must be at least 8 characters long';
         alertBox.style.display = 'block';
         return;
       }
@@ -176,7 +175,7 @@
 
       try {
         // Points directly to your existing PHP login file
-        const response = await fetch('login.php', {
+        const response = await fetch('api/login.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
