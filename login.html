@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Create an Account</title>
+  <title>Login</title>
   <style>
     * {
       box-sizing: border-box;
@@ -21,7 +21,7 @@
       padding: 20px;
     }
 
-    .register-card {
+    .login-card {
       background: #ffffff;
       padding: 40px;
       border-radius: 12px;
@@ -30,13 +30,13 @@
       max-width: 420px;
     }
 
-    .register-card h2 {
+    .login-card h2 {
       text-align: center;
       margin-bottom: 8px;
       color: #333333;
     }
 
-    .register-card p.subtitle {
+    .login-card p.subtitle {
       text-align: center;
       color: #666666;
       font-size: 14px;
@@ -70,19 +70,6 @@
       box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.15);
     }
 
-    .terms {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      color: #555555;
-      margin-bottom: 20px;
-    }
-
-    .terms input {
-      cursor: pointer;
-    }
-
     .btn-submit {
       width: 100%;
       padding: 12px;
@@ -98,23 +85,6 @@
 
     .btn-submit:hover {
       background-color: #0052cc;
-    }
-
-    .login-link {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 14px;
-      color: #666666;
-    }
-
-    .login-link a {
-      color: #0066ff;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .login-link a:hover {
-      text-decoration: underline;
     }
 
     .alert {
@@ -140,37 +110,14 @@
 </head>
 <body>
 
-  <div class="register-card">
-    <h2>Register today for easy contact management </h2>
-    <p class="subtitle">Please fill out everything to create your account</p>
+  <div class="login-card">
+    <h2>Welcome Back</h2>
+    <p class="subtitle">Login to access your contacts</p>
+    <p class="subtitle">Please enter your credentials to log in</p>
 
     <div id="alertMessage" class="alert"></div>
 
-    <form id="registerForm">
-      <div class="form-group">
-        <label for="firstName">First Name</label>
-        <input 
-          type="text" 
-          id="firstName" 
-          name="firstName" 
-          placeholder="John" 
-          required
-          autocomplete="given-name"
-        >
-      </div>
-
-      <div class="form-group">
-        <label for="lastName">Last Name</label>
-        <input 
-          type="text" 
-          id="lastName" 
-          name="lastName" 
-          placeholder="Smith" 
-          required
-          autocomplete="family-name"
-        >
-      </div>
-
+    <form id="loginForm">
       <div class="form-group">
         <label for="login">Username / Login</label>
         <input 
@@ -192,40 +139,44 @@
           placeholder="Password!" 
           minlength="8" 
           required 
-          autocomplete="new-password"
+          autocomplete="current-password"
         >
       </div>
 
-      <div class="terms">
-        <input type="checkbox" id="terms" name="terms" required>
-        <label for="terms">I agree to the <a href="#">Terms & Conditions</a></label>
-      </div>
-
-      <button type="submit" class="btn-submit">Sign Up</button>
+      <button type="submit" class="btn-submit">Log In</button>
     </form>
-
-    <p class="login-link">
-      Already have an account? <a href="login.html">Log in</a>
-    </p>
   </div>
 
   <script>
-    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
       e.preventDefault();
 
       const alertBox = document.getElementById('alertMessage');
       alertBox.style.display = 'none';
 
+      const loginInput = document.getElementById('login').value.trim();
+      const passwordInput = document.getElementById('password').value;
+
+      // Validate password format: >=8 chars, at least 1 number, at least 1 symbol
+      const hasMinLength = passwordInput.length >= 8;
+      const hasNumber = /[0-9]/.test(passwordInput);
+      const hasSymbol = /[\W_]/.test(passwordInput);
+
+      if (!hasMinLength || !hasNumber || !hasSymbol) {
+        alertBox.className = 'alert alert-error';
+        alertBox.textContent = 'Password must be at least 8 characters long and contain at least 1 number and 1 symbol.';
+        alertBox.style.display = 'block';
+        return;
+      }
+
       const payload = {
-        firstName: document.getElementById('firstName').value.trim(),
-        lastName: document.getElementById('lastName').value.trim(),
-        login: document.getElementById('login').value.trim(),
-        password: document.getElementById('password').value
+        login: loginInput,
+        password: passwordInput
       };
 
       try {
-        // Adjust relative path to point to your PHP registration endpoint file
-        const response = await fetch('register.php', {
+        // Points directly to your existing PHP login file
+        const response = await fetch('login.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -237,16 +188,22 @@
 
         if (response.ok) {
           alertBox.className = 'alert alert-success';
-          alertBox.textContent = data.message || 'Successfully registered!';
+          alertBox.textContent = data.message || 'Successfully logged in!';
           alertBox.style.display = 'block';
 
-          // Optionally redirect after success
+          // Store returned user session data
+          if (data.data) {
+            localStorage.setItem('user', JSON.stringify(data.data));
+          }
+
+          // Redirect to the dashboard
           setTimeout(() => {
-            window.location.href = 'login.html';
-          }, 1500);
+            window.location.href = 'dashboard.html';
+          }, 1000);
         } else {
+          // Display backend error message in the alert box
           alertBox.className = 'alert alert-error';
-          alertBox.textContent = data.message || 'Registration failed.';
+          alertBox.textContent = data.message || 'Login failed.';
           alertBox.style.display = 'block';
         }
       } catch (error) {
