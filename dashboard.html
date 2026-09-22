@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Manager</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5.3 & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+    <link rel="alternate icon" href="favicon.ico">
+    <!-- Custom Styles -->
+    <link href="css/styles.css" rel="stylesheet">
+    <!-- Scripts -->
+    <script type="text/javascript" src="js/code.js"></script>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            readCookie();
+            checkAdminRole();
+            loadMockContacts();
+        }, false);
+
+        // Client-side mock data store (fallback until APIs are connected)
+        let mockContacts = [
+            { id: 1, name: "Alice Smith", phone: "555-0199" },
+            { id: 2, name: "Bob Jones", phone: "555-0143" },
+            { id: 3, name: "Charlie Brown", phone: "555-0182" }
+        ];
+        let contactToDeleteId = null;
+
+        function checkAdminRole() {
+            // Check cookie or session flag (e.g., userRole === 'admin')
+            // For demonstration, checking localStorage or cookie
+            const isAdmin = localStorage.getItem("isAdmin") === "true";
+            if (isAdmin) {
+                document.getElementById('adminLinkBtn').classList.remove('d-none');
+            }
+        }
+
+        function loadMockContacts(filtered = null) {
+            const listContainer = document.getElementById('contactList');
+            listContainer.innerHTML = '';
+            const contactsToDisplay = filtered || mockContacts;
+
+            if (contactsToDisplay.length === 0) {
+                listContainer.innerHTML = '<p class="text-muted small mb-0">No contacts found.</p>';
+                return;
+            }
+
+            contactsToDisplay.forEach(c => {
+                const circle = document.createElement('div');
+                circle.className = 'd-flex flex-column align-items-center justify-content-center text-center p-3 rounded-circle bg-primary-subtle border border-primary position-relative shadow-sm';
+                circle.style.width = '140px';
+                circle.style.height = '140px';
+                
+                circle.innerHTML = `
+                    <button class="btn btn-danger btn-sm rounded-circle position-absolute top-0 end-0 m-1 p-0 d-flex align-items-center justify-content-center" 
+                            style="width: 24px; height: 24px;" 
+                            title="Delete Contact" 
+                            onclick="promptDeleteContact(${c.id}, '${c.name}')">
+                        <i class="bi bi-x"></i>
+                    </button>
+                    <i class="bi bi-person-circle fs-3 text-primary mb-1"></i>
+                    <strong class="text-truncate w-100 px-2 small text-white">${c.name}</strong>
+                    <span class="text-secondary small" style="font-size: 0.75rem;">${c.phone}</span>
+                `;
+                listContainer.appendChild(circle);
+            });
+        }
+
+        function searchContacts() {
+            const query = document.getElementById('searchText').value.toLowerCase().trim();
+            const results = mockContacts.filter(c => 
+                c.name.toLowerCase().includes(query) || c.phone.includes(query)
+            );
+            loadMockContacts(results);
+        }
+
+        function addContactMock() {
+            const name = document.getElementById('contactNameInput').value.trim();
+            const phone = document.getElementById('contactPhoneInput').value.trim();
+            
+            if (!name || !phone) {
+                document.getElementById('addContactMsg').innerText = "Please enter both name and number.";
+                return;
+            }
+
+            // Placeholder logic until API endpoint is integrated
+            const newContact = { id: Date.now(), name: name, phone: phone };
+            mockContacts.push(newContact);
+            
+            // Clear inputs & close modal
+            document.getElementById('contactNameInput').value = '';
+            document.getElementById('contactPhoneInput').value = '';
+            document.getElementById('addContactMsg').innerText = '';
+            
+            const modalEl = document.getElementById('addContactModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            modal.hide();
+
+            loadMockContacts();
+        }
+
+        function promptDeleteContact(id, name) {
+            contactToDeleteId = id;
+            document.getElementById('deleteTargetName').innerText = name;
+            const modal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+            modal.show();
+        }
+
+        function confirmDeleteContact() {
+            if (contactToDeleteId !== null) {
+                mockContacts = mockContacts.filter(c => c.id !== contactToDeleteId);
+                contactToDeleteId = null;
+                
+                const modalEl = document.getElementById('deleteConfirmModal');
+                const modal = bootstrap.Modal.getInstance(modalEl);
+                modal.hide();
+
+                loadMockContacts();
+            }
+        }
+    </script>
+</head>
+<body class="py-4 py-md-5">
+    <div class="background-glow"></div>
+    <main class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8">
+
+                <!-- Header / User Bar -->
+                <div class="d-flex flex-column flex-md-row align-items-center justify-content-between mb-4 pb-3 border-bottom border-secondary-subtle gap-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="app-icon-wrapper-sm">
+                            <i class="bi bi-person-lines-fill"></i>
+                        </div>
+                        <h1 id="title" class="h3 fw-bold mb-0">Contact Manager</h1>
+                    </div>
+                    
+                    <!-- Logged In User Info, Admin Nav, & Logout Button -->
+                    <div id="loggedInDiv" class="d-flex align-items-center gap-2 bg-body-tertiary px-3 py-2 rounded-pill border">
+                        <span id="userName" class="small fw-medium text-body me-1"></span>
+                        
+                        <!-- Conditional Admin Link -->
+                        <a href="admin.html" id="adminLinkBtn" class="btn btn-warning btn-sm rounded-pill px-3 d-none">
+                            <i class="bi bi-shield-lock-fill me-1"></i> Admin Panel
+                        </a>
+
+                        <button type="button" id="logoutButton" class="buttons btn btn-outline-danger btn-sm rounded-pill px-3" onclick="doLogout();">
+                            <i class="bi bi-box-arrow-right me-1"></i> Log Out
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Access UI Card -->
+                <div id="accessUIDiv" class="card glass-card shadow-lg border-0 p-4 p-md-5">
+                    <div class="card-body p-0">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="h5 fw-bold mb-0 d-flex align-items-center gap-2 text-white">
+                                <i class="bi bi-people text-primary"></i> My Contacts
+                            </h2>
+                            <!-- Add Contact Button Opens Modal -->
+                            <button type="button" class="btn btn-success rounded-pill px-3 fw-semibold" data-bs-toggle="modal" data-bs-target="#addContactModal">
+                                <i class="bi bi-plus-circle me-1"></i> Add Contact
+                            </button>
+                        </div>
+
+                        <!-- Search Section -->
+                        <div class="section-card p-4 rounded-4 border mb-4">
+                            <label for="searchText" class="form-label form-label-contrast small text-uppercase">Search Contacts</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-search text-secondary-contrast"></i></span>
+                                <input type="text" id="searchText" class="form-control" placeholder="Search by name or number..." onkeyup="searchContacts();" />
+                            </div>
+                        </div>
+
+                        <!-- Contacts Grid Display -->
+                        <div class="section-card p-4 rounded-4 border">
+                            <label class="form-label form-label-contrast small text-uppercase mb-3">Saved Contacts</label>
+                            <div id="contactList" class="d-flex flex-wrap gap-3 justify-content-start align-items-center">
+                                <!-- Contact circles dynamically rendered here -->
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal: Add Contact -->
+    <div class="modal fade" id="addContactModal" tabindex="-1" aria-labelledby="addContactModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-card border">
+                <div class="modal-header border-bottom border-secondary-subtle">
+                    <h5 class="modal-title text-white fw-bold" id="addContactModalLabel">
+                        <i class="bi bi-person-plus-fill text-primary me-2"></i>Add Contact
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="contactNameInput" class="form-label text-white small">Contact Name</label>
+                        <input type="text" id="contactNameInput" class="form-control" placeholder="Enter full name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="contactPhoneInput" class="form-label text-white small">Contact Number</label>
+                        <input type="text" id="contactPhoneInput" class="form-control" placeholder="Enter phone number">
+                    </div>
+                    <div id="addContactMsg" class="text-danger small fw-semibold"></div>
+                </div>
+                <div class="modal-footer border-top border-secondary-subtle">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success rounded-pill px-4" onclick="addContactMock();">Save Contact</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Confirm Delete -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content glass-card border">
+                <div class="modal-header border-bottom border-secondary-subtle">
+                    <h5 class="modal-title text-white fw-bold fs-6" id="deleteConfirmModalLabel">Delete Contact</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="text-white mb-1">Are you sure you want to delete <strong id="deleteTargetName"></strong>?</p>
+                    <small class="text-muted">This action cannot be undone.</small>
+                </div>
+                <div class="modal-footer border-top border-secondary-subtle justify-content-center">
+                    <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger btn-sm rounded-pill px-3" onclick="confirmDeleteContact();">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
