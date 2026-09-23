@@ -1,11 +1,44 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Group 1 Contact Manager</h1>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Manager</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div class="register-card">
+      <h1>Welcome to Contact Manager!</h1>
+
+      <div class="auth-section">
+        <h2>Register for a New Account</h2>
+        <p class="subtitle">Sign up for a new account to get started.</p>
+
+        <button
+          type="button"
+          class="btn-submit"
+          onclick="location.href='register.html'"
+        >
+          Sign Up
+        </button>
+      </div>
+
+      <div class="divider">
+        <span>OR</span>
+      </div>
+
+      <div class="auth-section">
+        <h2>Already have an account?</h2>
+        <p class="subtitle">Log in to your existing account.</p>
+
+        <button
+          type="button"
+          class="btn-outline"
+          onclick="location.href='login.html'"
+        >
+          Log In
+        </button>
+      </div>
+    </div>
+  </body>
 </html>
