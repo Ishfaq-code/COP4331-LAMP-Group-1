@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
   <link rel="stylesheet" href="css/login.css" />
+  <script src="js/login.js" defer></script>
 </head>
 <body>
   <div class="login-card">
@@ -46,74 +47,5 @@
     </p>
     </form>
   </div>
-
-  <script>
-    document.getElementById('loginForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-
-      const alertBox = document.getElementById('alertMessage');
-      alertBox.style.display = 'none';
-
-      const loginInput = document.getElementById('login').value.trim();
-      const passwordInput = document.getElementById('password').value;
-
-      // Validate password format: >=8 chars, at least 1 number, at least 1 symbol
-      const hasMinLength = passwordInput.length >= 8;
-      const hasNumber = /\d/.test(passwordInput)
-      const hasSymbol = /[^a-zA-Z0-9\s]/.test(passwordInput)
-  
-
-      if (!hasMinLength || !hasNumber || !hasSymbol) {
-        alertBox.className = 'alert alert-error';
-        alertBox.textContent = 'Password must be at least 8 characters long';
-        alertBox.style.display = 'block';
-        return;
-      }
-
-      const payload = {
-        login: loginInput,
-        password: passwordInput
-      };
-
-      try {
-        // Points directly to your existing PHP login file
-        const response = await fetch('api/login.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          alertBox.className = 'alert alert-success';
-          alertBox.textContent = data.message || 'Successfully logged in!';
-          alertBox.style.display = 'block';
-
-          // Store returned user session data
-          if (data.data) {
-            localStorage.setItem('user', JSON.stringify(data.data));
-          }
-
-          // Redirect to the dashboard
-          setTimeout(() => {
-            window.location.href = 'dashboard.html';
-          }, 1000);
-        } else {
-          // Display backend error message in the alert box
-          alertBox.className = 'alert alert-error';
-          alertBox.textContent = data.message || 'Login failed.';
-          alertBox.style.display = 'block';
-        }
-      } catch (error) {
-        alertBox.className = 'alert alert-error';
-        alertBox.textContent = 'Network error or server unavailable.';
-        alertBox.style.display = 'block';
-      }
-    });
-  </script>
-
 </body>
 </html>
