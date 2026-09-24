@@ -4,133 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      background-color: #0a0a0a;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-
-    .login-card {
-      background: #141414;
-      padding: 40px;
-      border-radius: 12px;
-      border-top: 4px solid #D4AF37; 
-      border-bottom: 4px solid #D4AF37;
-      border-left: 4px solid #D4AF37;
-      border-right: 4px solid #D4AF37;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-      width: 100%;
-      max-width: 420px;
-    }
-
-    .login-card h2 {
-      text-align: center;
-      margin-bottom: 8px;
-      font-size: 28px;
-      color: #D4AF37;
-    }
-
-    .login-card p.subtitle {
-      text-align: center;
-      color: #ffffff;
-      font-size: 14px;
-      margin-bottom: 24px;
-    }
-      .register-link {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 14px;
-      color: #666666;
-    }
-
-    .register-link a {
-      color: #D4AF37;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .register-link a:hover {
-      text-decoration: underline;
-    }
-
-    .form-group {
-      margin-bottom: 18px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: 600;
-      color: #D4AF37;
-      font-size: 14px;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #cccccc;
-      border-radius: 6px;
-      font-size: 14px;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .form-group input:focus {
-      outline: none;
-      border-color: #0066ff;
-      box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.15);
-    }
-
-    .btn-submit {
-      width: 100%;
-      padding: 12px;
-      background-color: #D4AF37;
-      color: #ffffff;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-    }
-
-    .btn-submit:hover {
-      background-color: #b6921d;
-    }
-
-    .alert {
-      padding: 10px;
-      border-radius: 6px;
-      margin-bottom: 18px;
-      font-size: 14px;
-      display: none;
-    }
-
-    .alert-error {
-      background-color: #ffe6e6;
-      color: #cc0000;
-      border: 1px solid #ffcccc;
-    }
-
-    .alert-success {
-      background-color: #e6ffe6;
-      color: #008000;
-      border: 1px solid #ccffcc;
-    }
-  </style>
+  <link rel="stylesheet" href="css/login.css" />
 </head>
 <body>
-
   <div class="login-card">
     <h2>Welcome Back</h2>
     <p class="subtitle">Login to access your contacts</p>
@@ -140,12 +16,12 @@
 
     <form id="loginForm">
       <div class="form-group">
-        <label for="login">Username / Login</label>
+        <label for="login">Username</label>
         <input 
           type="text" 
           id="login" 
           name="login" 
-          placeholder="MisterJohn" 
+          placeholder="Enter your username!" 
           required 
           autocomplete="username"
         >
@@ -157,7 +33,7 @@
           type="password" 
           id="password" 
           name="password" 
-          placeholder="Password!" 
+          placeholder="Enter your password!" 
           minlength="8" 
           required 
           autocomplete="current-password"
@@ -183,6 +59,8 @@
 
       // Validate password format: >=8 chars, at least 1 number, at least 1 symbol
       const hasMinLength = passwordInput.length >= 8;
+      const hasNumber = /\d/.test(passwordInput)
+      const hasSymbol = /[^a-zA-Z0-9\s]/.test(passwordInput)
   
 
       if (!hasMinLength || !hasNumber || !hasSymbol) {
