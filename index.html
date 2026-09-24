@@ -1,44 +1,51 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Contact Manager</title>
-    <link rel="stylesheet" href="css/styles.css" />
-  </head>
-  <body>
-    <div class="register-card">
-      <h1>Welcome to Contact Manager!</h1>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Manager</title>
+  <link rel="stylesheet" href="css/login.css" />
+  <script src="js/login.js" defer></script>
+</head>
+<body>
+  <div class="login-card">
+    <h2>Welcome Back</h2>
+    <p class="subtitle">Login to access your contacts</p>
+    <p class="subtitle">Please enter your credentials to log in</p>
 
-      <div class="auth-section">
-        <h2>Register for a New Account</h2>
-        <p class="subtitle">Sign up for a new account to get started.</p>
+    <div id="alertMessage" class="alert"></div>
 
-        <button
-          type="button"
-          class="btn-submit"
-          onclick="location.href='register.html'"
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="login">Username</label>
+        <input 
+          type="text" 
+          id="login" 
+          name="login" 
+          placeholder="Enter your username!" 
+          required 
+          autocomplete="username"
         >
-          Sign Up
-        </button>
       </div>
 
-      <div class="divider">
-        <span>OR</span>
-      </div>
-
-      <div class="auth-section">
-        <h2>Already have an account?</h2>
-        <p class="subtitle">Log in to your existing account.</p>
-
-        <button
-          type="button"
-          class="btn-outline"
-          onclick="location.href='login.html'"
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          placeholder="Enter your password!" 
+          minlength="8" 
+          required 
+          autocomplete="current-password"
         >
-          Log In
-        </button>
       </div>
-    </div>
-  </body>
+
+      <button type="submit" class="btn-submit">Log In</button>
+          <p class="register-link">
+      Dont already have an account? <a href="register.html">Register</a>
+    </p>
+    </form>
+  </div>
+</body>
 </html>
