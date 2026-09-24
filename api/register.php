@@ -53,7 +53,8 @@ try{
             "id" => $db->lastInsertId(),
             "firstName" => $firstName,
             "lastName" => $lastName,
-            "login" => $login
+            "login" => $login,
+            "role" => "User"
         ];
         http_response_code(201);
         response(201, "Successfully created registered user!", $user);

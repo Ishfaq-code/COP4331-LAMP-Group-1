@@ -35,7 +35,7 @@ try{
         if($user) {
             if (password_verify($password, $user["Password"])) {
                 http_response_code(200);
-                response(200, "Successfully logged in!", ["id" => $user["ID"], "firstName" => $user["FirstName"], "lastName" => $user["LastName"], "login" => $user["Login"]]);
+                response(200, "Successfully logged in!", ["id" => $user["ID"], "firstName" => $user["FirstName"], "lastName" => $user["LastName"], "login" => $user["Login"], "role" => $user["Role"]]);
             }
         }
         http_response_code(401);
