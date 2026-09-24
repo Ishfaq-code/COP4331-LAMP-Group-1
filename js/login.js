@@ -1,3 +1,5 @@
+import { saveCookie } from "./utility";
+
    document.getElementById('loginForm').addEventListener('submit', async function(e) {
       e.preventDefault();
 
@@ -29,10 +31,7 @@
           alertBox.textContent = data.message || 'Successfully logged in!';
           alertBox.style.display = 'block';
 
-          // Store returned user session data
-          if (data.data) {
-            localStorage.setItem('user', JSON.stringify(data.data));
-          }
+          saveCookie(data.data.firstName, data.data.lastName, data.data.id)
 
           // Redirect to the dashboard
           setTimeout(() => {
