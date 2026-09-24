@@ -1,4 +1,4 @@
-import { saveCookie } from "./utility";
+import { saveCookie } from "./utility.js";
 
    document.getElementById('loginForm').addEventListener('submit', async function(e) {
       e.preventDefault();

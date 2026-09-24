@@ -20,9 +20,13 @@
     <script type="text/javascript" src="js/code.js"></script>
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', function() {
-            readCookie();
-            checkAdminRole();
             loadMockContacts();
+
+            // Keep the mock dashboard usable even when the optional auth script is unavailable.
+            if (typeof readCookie === 'function') {
+                readCookie();
+            }
+            checkAdminRole();
         }, false);
 
         // Client-side mock data store (fallback until APIs are connected)
