@@ -1,252 +1,448 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Manager</title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Bootstrap 5.3 & Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
-    <link rel="alternate icon" href="favicon.ico">
-    <!-- Custom Styles -->
-    <link href="css/styles.css" rel="stylesheet">
-    <!-- Scripts -->
-    <script type="text/javascript" src="js/code.js"></script>
-    <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', function() {
-            loadMockContacts();
-
-            // Keep the mock dashboard usable even when the optional auth script is unavailable.
-            if (typeof readCookie === 'function') {
-                readCookie();
-            }
-            checkAdminRole();
-        }, false);
-
-        // Client-side mock data store (fallback until APIs are connected)
-        let mockContacts = [
-            { id: 1, name: "Alice Smith", phone: "555-0199" },
-            { id: 2, name: "Bob Jones", phone: "555-0143" },
-            { id: 3, name: "Charlie Brown", phone: "555-0182" }
-        ];
-        let contactToDeleteId = null;
-
-        function checkAdminRole() {
-            // Check cookie or session flag (e.g., userRole === 'admin')
-            // For demonstration, checking localStorage or cookie
-            const isAdmin = localStorage.getItem("isAdmin") === "true";
-            if (isAdmin) {
-                document.getElementById('adminLinkBtn').classList.remove('d-none');
-            }
-        }
-
-        function loadMockContacts(filtered = null) {
-            const listContainer = document.getElementById('contactList');
-            listContainer.innerHTML = '';
-            const contactsToDisplay = filtered || mockContacts;
-
-            if (contactsToDisplay.length === 0) {
-                listContainer.innerHTML = '<p class="text-muted small mb-0">No contacts found.</p>';
-                return;
-            }
-
-            contactsToDisplay.forEach(c => {
-                const circle = document.createElement('div');
-                circle.className = 'd-flex flex-column align-items-center justify-content-center text-center p-3 rounded-circle bg-primary-subtle border border-primary position-relative shadow-sm';
-                circle.style.width = '140px';
-                circle.style.height = '140px';
-                
-                circle.innerHTML = `
-                    <button class="btn btn-danger btn-sm rounded-circle position-absolute top-0 end-0 m-1 p-0 d-flex align-items-center justify-content-center" 
-                            style="width: 24px; height: 24px;" 
-                            title="Delete Contact" 
-                            onclick="promptDeleteContact(${c.id}, '${c.name}')">
-                        <i class="bi bi-x"></i>
-                    </button>
-                    <i class="bi bi-person-circle fs-3 text-primary mb-1"></i>
-                    <strong class="text-truncate w-100 px-2 small text-white">${c.name}</strong>
-                    <span class="text-secondary small" style="font-size: 0.75rem;">${c.phone}</span>
-                `;
-                listContainer.appendChild(circle);
-            });
-        }
-
-        function searchContacts() {
-            const query = document.getElementById('searchText').value.toLowerCase().trim();
-            const results = mockContacts.filter(c => 
-                c.name.toLowerCase().includes(query) || c.phone.includes(query)
-            );
-            loadMockContacts(results);
-        }
-
-        function addContactMock() {
-            const name = document.getElementById('contactNameInput').value.trim();
-            const phone = document.getElementById('contactPhoneInput').value.trim();
-            
-            if (!name || !phone) {
-                document.getElementById('addContactMsg').innerText = "Please enter both name and number.";
-                return;
-            }
-
-            // Placeholder logic until API endpoint is integrated
-            const newContact = { id: Date.now(), name: name, phone: phone };
-            mockContacts.push(newContact);
-            
-            // Clear inputs & close modal
-            document.getElementById('contactNameInput').value = '';
-            document.getElementById('contactPhoneInput').value = '';
-            document.getElementById('addContactMsg').innerText = '';
-            
-            const modalEl = document.getElementById('addContactModal');
-            const modal = bootstrap.Modal.getInstance(modalEl);
-            modal.hide();
-
-            loadMockContacts();
-        }
-
-        function promptDeleteContact(id, name) {
-            contactToDeleteId = id;
-            document.getElementById('deleteTargetName').innerText = name;
-            const modal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
-            modal.show();
-        }
-
-        function confirmDeleteContact() {
-            if (contactToDeleteId !== null) {
-                mockContacts = mockContacts.filter(c => c.id !== contactToDeleteId);
-                contactToDeleteId = null;
-                
-                const modalEl = document.getElementById('deleteConfirmModal');
-                const modal = bootstrap.Modal.getInstance(modalEl);
-                modal.hide();
-
-                loadMockContacts();
-            }
-        }
-    </script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Contact Manager</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+	<link rel="alternate icon" href="favicon.ico">
+	<link rel="stylesheet" href="css/dashboard.css">
+	<script type="text/javascript" src="js/code.js"></script>
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			loadMockContacts();
+			if (typeof readCookie === "function") {
+				readCookie();
+			}
+			checkAdminRole();
+		});
+		let mockContacts = [
+			{
+				id: 1,
+				name: "Alice Smith",
+				phone: "555-0199"
+			},
+			{
+				id: 2,
+				name: "Bob Jones",
+				phone: "555-0143"
+			},
+			{
+				id: 3,
+				name: "Charlie Brown",
+				phone: "555-0182"
+			}
+		];
+		let contactToDeleteId = null;
+		function checkAdminRole() {
+			const isAdmin = localStorage.getItem("isAdmin") === "true";
+			if (isAdmin) {
+				document
+					.getElementById("adminLinkBtn")
+					.classList.remove("hidden");
+			}
+		}
+		function loadMockContacts(filtered = null) {
+			const listContainer =
+				document.getElementById("contactList");
+			listContainer.innerHTML = "";
+			const contactsToDisplay =
+				filtered !== null ? filtered : mockContacts;
+			if (contactsToDisplay.length === 0) {
+				listContainer.innerHTML =
+					'<p class="empty-message">No contacts found.</p>';
+				return;
+			}
+			contactsToDisplay.forEach(function (contact) {
+				const circle =
+					document.createElement("div");
+				circle.className = "contact-circle";
+				circle.innerHTML = `
+					<button
+						type="button"
+						class="delete-contact"
+						title="Delete Contact"
+						aria-label="Delete ${escapeHtml(contact.name)}"
+						onclick="promptDeleteContact(${contact.id}, '${escapeJsString(contact.name)}')"
+					>
+						×
+					</button>
+					<div class="contact-icon">
+						<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+							<circle cx="12" cy="7" r="4"></circle>
+						</svg>
+					</div>
+					<strong class="contact-name">
+						${escapeHtml(contact.name)}
+					</strong>
+					<span class="contact-phone">
+						${escapeHtml(contact.phone)}
+					</span>
+				`;
+				listContainer.appendChild(circle);
+			});
+		}
+		function searchContacts() {
+			const query =
+				document
+					.getElementById("searchText")
+					.value
+					.toLowerCase()
+					.trim();
+			const results = mockContacts.filter(function (contact) {
+				return (
+					contact.name
+						.toLowerCase()
+						.includes(query) ||
+					contact.phone.includes(query)
+				);
+			});
+			loadMockContacts(results);
+		}
+		function addContactMock() {
+			const name =
+				document
+					.getElementById("contactNameInput")
+					.value
+					.trim();
+			const phone =
+				document
+					.getElementById("contactPhoneInput")
+					.value
+					.trim();
+			const message =
+				document.getElementById("addContactMsg");
+			if (!name || !phone) {
+				message.textContent =
+					"Please enter both name and number.";
+				return;
+			}
+			const newContact = {
+				id: Date.now(),
+				name: name,
+				phone: phone
+			};
+			mockContacts.push(newContact);
+			document.getElementById(
+				"contactNameInput"
+			).value = "";
+			document.getElementById(
+				"contactPhoneInput"
+			).value = "";
+			message.textContent = "";
+			closeModal("addContactModal");
+			loadMockContacts();
+		}
+		function promptDeleteContact(id, name) {
+			contactToDeleteId = id;
+			document.getElementById(
+				"deleteTargetName"
+			).textContent = name;
+			openModal("deleteConfirmModal");
+		}
+		function confirmDeleteContact() {
+			if (contactToDeleteId === null) {
+				return;
+			}
+			mockContacts = mockContacts.filter(function (contact) {
+				return contact.id !== contactToDeleteId;
+			});
+			contactToDeleteId = null;
+			closeModal("deleteConfirmModal");
+			loadMockContacts();
+		}
+		function openModal(id) {
+			const modal = document.getElementById(id);
+			modal.classList.add("show");
+			document.body.style.overflow = "hidden";
+		}
+		function closeModal(id) {
+			const modal = document.getElementById(id);
+			modal.classList.remove("show");
+			document.body.style.overflow = "";
+		}
+		document.addEventListener("click", function (event) {
+			if (
+				event.target.classList.contains("modal")
+			) {
+				closeModal(event.target.id);
+			}
+		});
+		document.addEventListener("keydown", function (event) {
+			if (event.key === "Escape") {
+				document
+					.querySelectorAll(".modal.show")
+					.forEach(function (modal) {
+						closeModal(modal.id);
+					});
+			}
+		});
+		function escapeHtml(value) {
+			return String(value)
+				.replace(/&/g, "&amp;")
+				.replace(/</g, "&lt;")
+				.replace(/>/g, "&gt;")
+				.replace(/"/g, "&quot;")
+				.replace(/'/g, "&#039;");
+		}
+		function escapeJsString(value) {
+			return String(value)
+				.replace(/\\/g, "\\\\")
+				.replace(/'/g, "\\'");
+		}
+	</script>
 </head>
-<body class="py-4 py-md-5">
-    <div class="background-glow"></div>
-    <main class="container">
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-10 col-lg-8">
-
-                <!-- Header / User Bar -->
-                <div class="d-flex flex-column flex-md-row align-items-center justify-content-between mb-4 pb-3 border-bottom border-secondary-subtle gap-3">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="app-icon-wrapper-sm">
-                            <i class="bi bi-person-lines-fill"></i>
-                        </div>
-                        <h1 id="title" class="h3 fw-bold mb-0">Contact Manager</h1>
-                    </div>
-                    
-                    <!-- Logged In User Info, Admin Nav, & Logout Button -->
-                    <div id="loggedInDiv" class="d-flex align-items-center gap-2 bg-body-tertiary px-3 py-2 rounded-pill border">
-                        <span id="userName" class="small fw-medium text-body me-1"></span>
-                        
-                        <!-- Conditional Admin Link -->
-                        <a href="admin.html" id="adminLinkBtn" class="btn btn-warning btn-sm rounded-pill px-3 d-none">
-                            <i class="bi bi-shield-lock-fill me-1"></i> Admin Panel
-                        </a>
-
-                        <button type="button" id="logoutButton" class="buttons btn btn-outline-danger btn-sm rounded-pill px-3" onclick="doLogout();">
-                            <i class="bi bi-box-arrow-right me-1"></i> Log Out
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Access UI Card -->
-                <div id="accessUIDiv" class="card glass-card shadow-lg border-0 p-4 p-md-5">
-                    <div class="card-body p-0">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h2 class="h5 fw-bold mb-0 d-flex align-items-center gap-2 text-white">
-                                <i class="bi bi-people text-primary"></i> My Contacts
-                            </h2>
-                            <!-- Add Contact Button Opens Modal -->
-                            <button type="button" class="btn btn-success rounded-pill px-3 fw-semibold" data-bs-toggle="modal" data-bs-target="#addContactModal">
-                                <i class="bi bi-plus-circle me-1"></i> Add Contact
-                            </button>
-                        </div>
-
-                        <!-- Search Section -->
-                        <div class="section-card p-4 rounded-4 border mb-4">
-                            <label for="searchText" class="form-label form-label-contrast small text-uppercase">Search Contacts</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-search text-secondary-contrast"></i></span>
-                                <input type="text" id="searchText" class="form-control" placeholder="Search by name or number..." onkeyup="searchContacts();" />
-                            </div>
-                        </div>
-
-                        <!-- Contacts Grid Display -->
-                        <div class="section-card p-4 rounded-4 border">
-                            <label class="form-label form-label-contrast small text-uppercase mb-3">Saved Contacts</label>
-                            <div id="contactList" class="d-flex flex-wrap gap-3 justify-content-start align-items-center">
-                                <!-- Contact circles dynamically rendered here -->
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </main>
-
-    <!-- Modal: Add Contact -->
-    <div class="modal fade" id="addContactModal" tabindex="-1" aria-labelledby="addContactModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content glass-card border">
-                <div class="modal-header border-bottom border-secondary-subtle">
-                    <h5 class="modal-title text-white fw-bold" id="addContactModalLabel">
-                        <i class="bi bi-person-plus-fill text-primary me-2"></i>Add Contact
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="contactNameInput" class="form-label text-white small">Contact Name</label>
-                        <input type="text" id="contactNameInput" class="form-control" placeholder="Enter full name">
-                    </div>
-                    <div class="mb-3">
-                        <label for="contactPhoneInput" class="form-label text-white small">Contact Number</label>
-                        <input type="text" id="contactPhoneInput" class="form-control" placeholder="Enter phone number">
-                    </div>
-                    <div id="addContactMsg" class="text-danger small fw-semibold"></div>
-                </div>
-                <div class="modal-footer border-top border-secondary-subtle">
-                    <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-success rounded-pill px-4" onclick="addContactMock();">Save Contact</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal: Confirm Delete -->
-    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content glass-card border">
-                <div class="modal-header border-bottom border-secondary-subtle">
-                    <h5 class="modal-title text-white fw-bold fs-6" id="deleteConfirmModalLabel">Delete Contact</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <p class="text-white mb-1">Are you sure you want to delete <strong id="deleteTargetName"></strong>?</p>
-                    <small class="text-muted">This action cannot be undone.</small>
-                </div>
-                <div class="modal-footer border-top border-secondary-subtle justify-content-center">
-                    <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger btn-sm rounded-pill px-3" onclick="confirmDeleteContact();">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<body>
+	<main class="container">
+		<header class="header">
+			<div class="header-left">
+				<div class="app-icon">
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+						<circle cx="9" cy="7" r="4"></circle>
+						<path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+						<path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+					</svg>
+				</div>
+				<h1 class="title">
+					Contact Manager
+				</h1>
+			</div>
+			<div id="loggedInDiv" class="user-bar">
+				<span id="userName" class="user-name"></span>
+				<a
+					href="admin.html"
+					id="adminLinkBtn"
+					class="btn btn-gold btn-small hidden"
+				>
+					<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+					</svg>
+					Admin Panel
+				</a>
+				<button
+					type="button"
+					id="logoutButton"
+					class="btn btn-danger btn-small"
+					onclick="doLogout();"
+				>
+					<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+						<polyline points="16 17 21 12 16 7"></polyline>
+						<line x1="21" y1="12" x2="9" y2="12"></line>
+					</svg>
+					Log Out
+				</button>
+			</div>
+		</header>
+		<section id="accessUIDiv" class="card">
+			<div class="card-header">
+				<h2 class="section-title">
+					<span class="section-title-icon">
+						<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+							<circle cx="9" cy="7" r="4"></circle>
+							<path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+							<path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+						</svg>
+					</span>
+					My Contacts
+				</h2>
+				<button
+					type="button"
+					class="btn btn-gold"
+					onclick="openModal('addContactModal')"
+				>
+					<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+						<circle cx="8.5" cy="7" r="4"></circle>
+						<line x1="20" y1="8" x2="20" y2="14"></line>
+						<line x1="17" y1="11" x2="23" y2="11"></line>
+					</svg>
+					Add Contact
+				</button>
+			</div>
+			<div class="section-card">
+				<label
+					for="searchText"
+					class="section-label"
+				>
+					Search Contacts
+				</label>
+				<div class="input-group">
+					<span class="input-icon">
+						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<circle cx="11" cy="11" r="8"></circle>
+							<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+						</svg>
+					</span>
+					<input
+						type="text"
+						id="searchText"
+						class="form-control"
+						placeholder="Search by name or number..."
+						onkeyup="searchContacts();"
+					>
+				</div>
+			</div>
+			<div class="section-card">
+				<label class="section-label">
+					Saved Contacts
+				</label>
+				<div
+					id="contactList"
+					class="contacts-list"
+				>
+				</div>
+			</div>
+		</section>
+	</main>
+	<div
+		class="modal"
+		id="addContactModal"
+		role="dialog"
+		aria-modal="true"
+		aria-labelledby="addContactModalLabel"
+	>
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2
+						class="modal-title"
+						id="addContactModalLabel"
+					>
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+							<circle cx="8.5" cy="7" r="4"></circle>
+							<line x1="20" y1="8" x2="20" y2="14"></line>
+							<line x1="17" y1="11" x2="23" y2="11"></line>
+						</svg>
+						Add Contact
+					</h2>
+					<button
+						type="button"
+						class="modal-close"
+						aria-label="Close"
+						onclick="closeModal('addContactModal')"
+					>
+						×
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label
+							for="contactNameInput"
+							class="form-label"
+						>
+							Contact Name
+						</label>
+						<input
+							type="text"
+							id="contactNameInput"
+							class="form-control"
+							placeholder="Enter full name"
+						>
+					</div>
+					<div class="form-group">
+						<label
+							for="contactPhoneInput"
+							class="form-label"
+						>
+							Contact Number
+						</label>
+						<input
+							type="text"
+							id="contactPhoneInput"
+							class="form-control"
+							placeholder="Enter phone number"
+						>
+					</div>
+					<div
+						id="addContactMsg"
+						class="error-message"
+					></div>
+				</div>
+				<div class="modal-footer">
+					<button
+						type="button"
+						class="btn btn-outline-gold"
+						onclick="closeModal('addContactModal')"
+					>
+						Cancel
+					</button>
+					<button
+						type="button"
+						class="btn btn-gold"
+						onclick="addContactMock();"
+					>
+						Save Contact
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div
+		class="modal"
+		id="deleteConfirmModal"
+		role="dialog"
+		aria-modal="true"
+		aria-labelledby="deleteConfirmModalLabel"
+	>
+		<div class="modal-dialog modal-dialog-small">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2
+						class="modal-title"
+						id="deleteConfirmModalLabel"
+					>
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d9534f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+							<circle cx="8.5" cy="7" r="4"></circle>
+							<line x1="18" y1="8" x2="23" y2="13"></line>
+							<line x1="23" y1="8" x2="18" y2="13"></line>
+						</svg>
+						Delete Contact
+					</h2>
+					<button
+						type="button"
+						class="modal-close"
+						aria-label="Close"
+						onclick="closeModal('deleteConfirmModal')"
+					>
+						×
+					</button>
+				</div>
+				<div class="modal-body">
+					<p class="delete-message">
+						Are you sure you want to delete
+						<strong id="deleteTargetName"></strong>?
+					</p>
+					<span class="delete-warning">
+						This action cannot be undone.
+					</span>
+				</div>
+				<div class="modal-footer">
+					<button
+						type="button"
+						class="btn btn-outline-gold btn-small"
+						onclick="closeModal('deleteConfirmModal')"
+					>
+						Cancel
+					</button>
+					<button
+						type="button"
+						class="btn btn-danger btn-small"
+						onclick="confirmDeleteContact();"
+					>
+						Delete
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
