@@ -9,15 +9,14 @@ if($_SERVER['REQUEST_METHOD'] != 'GET'){
     response(405,"Method not Allowed",null);
 }
 
-// Read search parameters from the URL
-$userId = $_GET['userId'] ?? null;
-$search = $_GET['search'] ?? '';
-
-//Ensures that there is a User we are searching from 
-if (!$userId) {
-    http_response_code(400);
-    response(400, "Missing required parameter: userId", null);
+$userId = checkAuth();
+if ($userId === null) {
+    http_response_code(401);
+    response(401, "Unauthenticated", null);
 }
+
+// Read search parameters from the URL
+$search = $_GET['search'] ?? '';
 
 try{
     $db = getDB();

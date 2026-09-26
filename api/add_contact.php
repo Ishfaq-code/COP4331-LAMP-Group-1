@@ -9,6 +9,12 @@ if($_SERVER['REQUEST_METHOD'] != 'POST'){
     response(405,"Method not Allowed",null);
 }
 
+$userId = checkAuth();
+if ($userId === null) {
+    http_response_code(401);
+    response(401, "Unauthenticated", null);
+}
+
 // Get data from the request
 $data = json_decode(file_get_contents("php://input"), true);
 
@@ -23,11 +29,10 @@ $firstName = trim($data["firstName"]);
 $lastName  = trim($data["lastName"]);
 $email = trim($data["email"]);
 $phone = trim($data["phone"]);
-$userId = trim($data["userId"]);
 
-if (empty($firstName) || empty($lastName) || empty($userId)) {
+if (empty($firstName) || empty($lastName)) {
     http_response_code(400);
-    response(400, "Missing required fields: firstName, lastName, and userId are required.", null);
+    response(400, "Missing required fields: firstName and lastName are required.", null);
 }
 
 try{

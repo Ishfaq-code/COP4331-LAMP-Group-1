@@ -9,6 +9,12 @@ if($_SERVER['REQUEST_METHOD'] != 'PUT'){
     response(405,"Method not Allowed",null);
 }
 
+$userId = checkAuth();
+if ($userId === null) {
+    http_response_code(401);
+    response(401, "Unauthenticated", null);
+}
+
 // Get data from the request
 $data = json_decode(file_get_contents("php://input"), true);
 
@@ -21,9 +27,9 @@ if (!is_array($data)) {
 try{
     $db = getDB();
     //Prepares MySQL query
-    $stmt = $db->prepare('UPDATE contacts SET FirstName = :FirstName, LastName = :LastName, EmailAddress = :EmailAddress, PhoneNumber = :PhoneNumber, DateUpdated = NOW() WHERE ID = :ID');
+    $stmt = $db->prepare('UPDATE contacts SET FirstName = :FirstName, LastName = :LastName, EmailAddress = :EmailAddress, PhoneNumber = :PhoneNumber, DateUpdated = NOW() WHERE ID = :ID AND UserID = :UserID');
 
-    $stmt->execute([':FirstName' => $data['FirstName'], ':LastName' => $data['LastName'], ':EmailAddress' => $data['EmailAddress'], ':PhoneNumber' => $data['PhoneNumber'] ?? null, ':ID' => $data['ID']]);
+    $stmt->execute([':FirstName' => $data['FirstName'], ':LastName' => $data['LastName'], ':EmailAddress' => $data['EmailAddress'], ':PhoneNumber' => $data['PhoneNumber'] ?? null, ':ID' => $data['ID'], ':UserID' => $userId]);
 
     //Checks if Contact was updtated
     if ($stmt->rowCount() > 0) {
