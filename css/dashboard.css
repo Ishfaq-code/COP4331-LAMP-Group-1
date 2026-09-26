@@ -111,6 +111,25 @@ button {
         0 20px 60px rgba(0, 0, 0, 0.65),
         0 0 30px rgba(212, 175, 55, 0.04);
 }
+.alert {
+    display: none;
+    margin-bottom: 20px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+}
+.alert-error {
+    color: #ff6b66;
+    background: rgba(217, 83, 79, 0.12);
+    border: 1px solid var(--danger);
+}
+.alert-success {
+    color: var(--gold-light);
+    background: rgba(212, 175, 55, 0.12);
+    border: 1px solid var(--gold);
+}
 .card-header {
     display: flex;
     align-items: center;
@@ -253,19 +272,19 @@ button {
 .contacts-list {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: stretch;
     gap: 18px;
 }
 .contact-circle {
     position: relative;
-    width: 145px;
-    height: 145px;
+    width: 250px;
+    min-height: 190px;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     padding: 15px;
-    text-align: center;
+    text-align: left;
     background:
         radial-gradient(
             circle at 50% 30%,
@@ -274,7 +293,7 @@ button {
         ),
         #0c0c0c;
     border: 1px solid var(--gold);
-    border-radius: 50%;
+    border-radius: 16px;
     box-shadow:
         inset 0 0 20px rgba(212, 175, 55, 0.03),
         0 5px 20px rgba(0, 0, 0, 0.4);
@@ -297,9 +316,10 @@ button {
     align-items: center;
     justify-content: center;
 }
-.contact-name {
+.contact-first-name,
+.contact-last-name {
     width: 100%;
-    padding: 0 10px;
+    padding-right: 20px;
     overflow: hidden;
     color: var(--white);
     font-size: 12px;
@@ -307,10 +327,37 @@ button {
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+.contact-last-name {
+    color: var(--gold-light);
+}
+.contact-email,
 .contact-phone {
     margin-top: 4px;
     color: var(--gray);
     font-size: 11px;
+    overflow-wrap: anywhere;
+}
+.contact-actions {
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.edit-contact {
+    min-height: 25px;
+    padding: 3px 8px;
+    color: var(--gold-light);
+    background: #161207;
+    border: 1px solid var(--gold-dark);
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 600;
+}
+.edit-contact:hover {
+    color: #050505;
+    background: var(--gold);
 }
 .delete-contact {
     position: absolute;
@@ -329,6 +376,9 @@ button {
     font-size: 15px;
     line-height: 1;
     transition: background var(--transition);
+}
+.contact-actions .delete-contact {
+    position: static;
 }
 .delete-contact:hover {
     background: var(--danger);
@@ -489,8 +539,8 @@ button {
         padding: 17px;
     }
     .contact-circle {
-        width: 130px;
-        height: 130px;
+        width: 100%;
+        min-height: 160px;
     }
     .btn {
         font-size: 12px;

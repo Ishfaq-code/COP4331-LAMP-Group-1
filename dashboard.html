@@ -4,197 +4,8 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Contact Manager</title>
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-	<link rel="icon" type="image/svg+xml" href="images/favicon.svg">
-	<link rel="alternate icon" href="favicon.ico">
 	<link rel="stylesheet" href="css/dashboard.css">
-	<script type="text/javascript" src="js/code.js"></script>
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			loadMockContacts();
-			if (typeof readCookie === "function") {
-				readCookie();
-			}
-			checkAdminRole();
-		});
-		let mockContacts = [
-			{
-				id: 1,
-				name: "Alice Smith",
-				phone: "555-0199"
-			},
-			{
-				id: 2,
-				name: "Bob Jones",
-				phone: "555-0143"
-			},
-			{
-				id: 3,
-				name: "Charlie Brown",
-				phone: "555-0182"
-			}
-		];
-		let contactToDeleteId = null;
-		function checkAdminRole() {
-			const isAdmin = localStorage.getItem("isAdmin") === "true";
-			if (isAdmin) {
-				document
-					.getElementById("adminLinkBtn")
-					.classList.remove("hidden");
-			}
-		}
-		function loadMockContacts(filtered = null) {
-			const listContainer =
-				document.getElementById("contactList");
-			listContainer.innerHTML = "";
-			const contactsToDisplay =
-				filtered !== null ? filtered : mockContacts;
-			if (contactsToDisplay.length === 0) {
-				listContainer.innerHTML =
-					'<p class="empty-message">No contacts found.</p>';
-				return;
-			}
-			contactsToDisplay.forEach(function (contact) {
-				const circle =
-					document.createElement("div");
-				circle.className = "contact-circle";
-				circle.innerHTML = `
-					<button
-						type="button"
-						class="delete-contact"
-						title="Delete Contact"
-						aria-label="Delete ${escapeHtml(contact.name)}"
-						onclick="promptDeleteContact(${contact.id}, '${escapeJsString(contact.name)}')"
-					>
-						×
-					</button>
-					<div class="contact-icon">
-						<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-							<circle cx="12" cy="7" r="4"></circle>
-						</svg>
-					</div>
-					<strong class="contact-name">
-						${escapeHtml(contact.name)}
-					</strong>
-					<span class="contact-phone">
-						${escapeHtml(contact.phone)}
-					</span>
-				`;
-				listContainer.appendChild(circle);
-			});
-		}
-		function searchContacts() {
-			const query =
-				document
-					.getElementById("searchText")
-					.value
-					.toLowerCase()
-					.trim();
-			const results = mockContacts.filter(function (contact) {
-				return (
-					contact.name
-						.toLowerCase()
-						.includes(query) ||
-					contact.phone.includes(query)
-				);
-			});
-			loadMockContacts(results);
-		}
-		function addContactMock() {
-			const name =
-				document
-					.getElementById("contactNameInput")
-					.value
-					.trim();
-			const phone =
-				document
-					.getElementById("contactPhoneInput")
-					.value
-					.trim();
-			const message =
-				document.getElementById("addContactMsg");
-			if (!name || !phone) {
-				message.textContent =
-					"Please enter both name and number.";
-				return;
-			}
-			const newContact = {
-				id: Date.now(),
-				name: name,
-				phone: phone
-			};
-			mockContacts.push(newContact);
-			document.getElementById(
-				"contactNameInput"
-			).value = "";
-			document.getElementById(
-				"contactPhoneInput"
-			).value = "";
-			message.textContent = "";
-			closeModal("addContactModal");
-			loadMockContacts();
-		}
-		function promptDeleteContact(id, name) {
-			contactToDeleteId = id;
-			document.getElementById(
-				"deleteTargetName"
-			).textContent = name;
-			openModal("deleteConfirmModal");
-		}
-		function confirmDeleteContact() {
-			if (contactToDeleteId === null) {
-				return;
-			}
-			mockContacts = mockContacts.filter(function (contact) {
-				return contact.id !== contactToDeleteId;
-			});
-			contactToDeleteId = null;
-			closeModal("deleteConfirmModal");
-			loadMockContacts();
-		}
-		function openModal(id) {
-			const modal = document.getElementById(id);
-			modal.classList.add("show");
-			document.body.style.overflow = "hidden";
-		}
-		function closeModal(id) {
-			const modal = document.getElementById(id);
-			modal.classList.remove("show");
-			document.body.style.overflow = "";
-		}
-		document.addEventListener("click", function (event) {
-			if (
-				event.target.classList.contains("modal")
-			) {
-				closeModal(event.target.id);
-			}
-		});
-		document.addEventListener("keydown", function (event) {
-			if (event.key === "Escape") {
-				document
-					.querySelectorAll(".modal.show")
-					.forEach(function (modal) {
-						closeModal(modal.id);
-					});
-			}
-		});
-		function escapeHtml(value) {
-			return String(value)
-				.replace(/&/g, "&amp;")
-				.replace(/</g, "&lt;")
-				.replace(/>/g, "&gt;")
-				.replace(/"/g, "&quot;")
-				.replace(/'/g, "&#039;");
-		}
-		function escapeJsString(value) {
-			return String(value)
-				.replace(/\\/g, "\\\\")
-				.replace(/'/g, "\\'");
-		}
-	</script>
+	<script type="module" src="js/dashboard.js" defer></script>
 </head>
 <body>
 	<main class="container">
@@ -240,6 +51,7 @@
 			</div>
 		</header>
 		<section id="accessUIDiv" class="card">
+			<div id="alertMessage" class="alert" role="status" aria-live="polite"></div>
 			<div class="card-header">
 				<h2 class="section-title">
 					<span class="section-title-icon">
@@ -335,16 +147,47 @@
 				<div class="modal-body">
 					<div class="form-group">
 						<label
-							for="contactNameInput"
+							for="contactFirstNameInput"
 							class="form-label"
 						>
-							Contact Name
+							First Name
 						</label>
 						<input
 							type="text"
-							id="contactNameInput"
+							id="contactFirstNameInput"
 							class="form-control"
-							placeholder="Enter full name"
+							placeholder="Enter first name"
+							required
+						>
+					</div>
+					<div class="form-group">
+						<label
+							for="contactLastNameInput"
+							class="form-label"
+						>
+							Last Name
+						</label>
+						<input
+							type="text"
+							id="contactLastNameInput"
+							class="form-control"
+							placeholder="Enter last name"
+							required
+						>
+					</div>
+					<div class="form-group">
+						<label
+							for="contactEmailInput"
+							class="form-label"
+						>
+							Email
+						</label>
+						<input
+							type="email"
+							id="contactEmailInput"
+							class="form-control"
+							placeholder="Enter email address"
+							required
 						>
 					</div>
 					<div class="form-group">
@@ -352,7 +195,7 @@
 							for="contactPhoneInput"
 							class="form-label"
 						>
-							Contact Number
+							Phone Number
 						</label>
 						<input
 							type="text"
@@ -380,6 +223,69 @@
 						onclick="addContactMock();"
 					>
 						Save Contact
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div
+		class="modal"
+		id="editContactModal"
+		role="dialog"
+		aria-modal="true"
+		aria-labelledby="editContactModalLabel"
+	>
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2
+						class="modal-title"
+						id="editContactModalLabel"
+					>
+						Edit Contact
+					</h2>
+					<button
+						type="button"
+						class="modal-close"
+						aria-label="Close"
+						onclick="closeModal('editContactModal')"
+					>
+						×
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="editFirstNameInput" class="form-label">First Name</label>
+						<input type="text" id="editFirstNameInput" class="form-control" required>
+					</div>
+					<div class="form-group">
+						<label for="editLastNameInput" class="form-label">Last Name</label>
+						<input type="text" id="editLastNameInput" class="form-control" required>
+					</div>
+					<div class="form-group">
+						<label for="editEmailInput" class="form-label">Email</label>
+						<input type="email" id="editEmailInput" class="form-control" required>
+					</div>
+					<div class="form-group">
+						<label for="editPhoneInput" class="form-label">Phone Number</label>
+						<input type="text" id="editPhoneInput" class="form-control" required>
+					</div>
+					<div id="editContactMsg" class="error-message"></div>
+				</div>
+				<div class="modal-footer">
+					<button
+						type="button"
+						class="btn btn-outline-gold"
+						onclick="closeModal('editContactModal')"
+					>
+						Cancel
+					</button>
+					<button
+						type="button"
+						class="btn btn-gold"
+						onclick="saveEditedContact();"
+					>
+						Save Changes
 					</button>
 				</div>
 			</div>
