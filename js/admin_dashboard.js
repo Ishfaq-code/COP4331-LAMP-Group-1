@@ -1,7 +1,14 @@
+import { clearCookie } from "./utility.js";
+
 const usersById = new Map();
 let messageTimeout;
 
 document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("logoutButton").addEventListener("click", () => {
+        clearCookie();
+        window.location.href = "index.html";
+    });
+
     document.getElementById("userSearchInput").addEventListener("input", fetchUsers);
     document.getElementById("adminFilter").addEventListener("change", fetchUsers);
     document.getElementById("activeFilter").addEventListener("change", fetchUsers);

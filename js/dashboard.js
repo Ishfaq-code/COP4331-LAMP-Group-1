@@ -7,9 +7,8 @@ const contactCache = new Map()
 
 document.addEventListener("DOMContentLoaded", async function () {
     const user = readCookie()
-    console.log(user)
-    if(user.role == 'Admin'){
-        window.location.href = 'admin_dashboard.html';
+    if (user.role === 'Admin') {
+        document.getElementById('adminLinkBtn').classList.remove('hidden')
     }
 
     await refreshContacts()

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link href="css/admin.css" rel="stylesheet">
-    <script src="js/admin_dashboard.js" defer></script> 
+    <script type="module" src="js/admin_dashboard.js" defer></script>
 </head>
 <body>
     <main class="container">
@@ -16,6 +16,10 @@
                 <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
                 </div>
                 <h1 class="title">Faculty and Staff Admin Dashboard</h1>
+            </div>
+            <div class="header-actions">
+                <a href="dashboard.html" class="btn btn-outline-gold">User Dashboard</a>
+                <button type="button" id="logoutButton" class="btn btn-danger">Log Out</button>
             </div>
         </div>
 

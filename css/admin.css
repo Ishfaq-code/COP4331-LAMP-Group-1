@@ -71,6 +71,12 @@ button {
     gap: 14px;
 }
 
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .app-icon {
     width: 46px;
     height: 46px;
@@ -527,6 +533,10 @@ button {
     }
     
     .header-left {
+        justify-content: center;
+    }
+
+    .header-actions {
         justify-content: center;
     }
 
