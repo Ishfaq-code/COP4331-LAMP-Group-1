@@ -31,11 +31,12 @@ try {
 
     $search = trim((string) ($_GET["search"] ?? ""));
     if ($search !== "") {
-        $conditions[] = "(FirstName LIKE :firstNameSearch OR LastName LIKE :lastNameSearch OR EmailAddress LIKE :emailSearch)";
+        $conditions[] = "(FirstName LIKE :firstNameSearch OR LastName LIKE :lastNameSearch OR EmailAddress LIKE :emailSearch OR PhoneNumber LIKE :phoneSearch)";
         $searchPattern = "%" . $search . "%";
         $params[":firstNameSearch"] = $searchPattern;
         $params[":lastNameSearch"] = $searchPattern;
         $params[":emailSearch"] = $searchPattern;
+        $params[":phoneSearch"] = $searchPattern;
     }
 
     if (array_key_exists("userId", $_GET)) {

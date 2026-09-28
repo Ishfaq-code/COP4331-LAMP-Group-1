@@ -22,9 +22,9 @@ try{
     $db = getDB();
 
     //Sets up database query
-    $stmt = $db->prepare('SELECT ID, FirstName, LastName, EmailAddress, PhoneNumber FROM Contacts WHERE UserID = :userId AND (FirstName LIKE :search1 OR LastName LIKE :search2 OR EmailAddress LIKE :search3)');
+    $stmt = $db->prepare('SELECT ID, FirstName, LastName, EmailAddress, PhoneNumber FROM Contacts WHERE UserID = :userId AND (FirstName LIKE :search1 OR LastName LIKE :search2 OR EmailAddress LIKE :search3 OR PhoneNumber LIKE :search4)');
     $searcher = '%'.$search.'%';
-    $stmt->execute([':userId' => $userId, ':search1' => $searcher,':search2' => $searcher,':search3' => $searcher ]);
+    $stmt->execute([':userId' => $userId, ':search1' => $searcher,':search2' => $searcher,':search3' => $searcher, ':search4' => $searcher ]);
 
     $contacts = $stmt->fetchAll();
 
