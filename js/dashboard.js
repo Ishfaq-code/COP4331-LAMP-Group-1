@@ -7,6 +7,11 @@ const contactCache = new Map()
 
 document.addEventListener("DOMContentLoaded", async function () {
     const user = readCookie()
+    console.log(user)
+    if(user.role == 'Admin'){
+        window.location.href = 'admin_dashboard.html';
+    }
+
     await refreshContacts()
 
     document.addEventListener('click', function (event) {

@@ -4,15 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
     <link href="css/admin.css" rel="stylesheet">
-    <script type="text/javascript" src="js/code.js"></script>
+    <script src="js/admin_dashboard.js" defer></script>
 </head>
 <body>
     <main class="container">
@@ -20,53 +13,172 @@
         <div class="header">
             <div class="header-left">
                 <div class="app-icon">
-                    <i class="bi bi-shield-lock-fill"></i>
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
                 </div>
                 <h1 class="title">Admin Dashboard</h1>
             </div>
-            <a href="color.html" class="btn btn-outline-gold">
-                <i class="bi bi-arrow-left"></i> Back to Contacts
+            <a href="dashboard.html" class="btn btn-outline-gold">
+                <span aria-hidden="true">←</span> Back to Contacts
             </a>
+        </div>
+
+        <div id="statusMessage" class="status-msg" hidden></div>
+
+        <!-- User Management Section -->
+        <div class="card mb-4">
+            <h2 class="card-title">
+                <svg class="section-icon text-gold" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg> Manage Users
+            </h2>
+            <div class="filter-controls">
+                <input type="text" id="userSearchInput" class="form-control" placeholder="Search by name or login...">
+                <div class="filter-select-group">
+                    <label class="filter-label" for="adminFilter">Role</label>
+                    <select id="adminFilter" class="form-control" aria-label="Filter users by role">
+                        <option value="all">All</option>
+                        <option value="admin">Admin</option>
+                        <option value="non-admin">Non-Admin</option>
+                    </select>
+                </div>
+                <div class="filter-select-group">
+                    <label class="filter-label" for="activeFilter">Status</label>
+                    <select id="activeFilter" class="form-control" aria-label="Filter users by account status">
+                        <option value="all">All</option>
+                        <option value="active">Active</option>
+                        <option value="suspended">Suspended</option>
+                    </select>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Login</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr><td colspan="7">Loading users...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Contact Management Section -->
+        <div class="card mb-4">
+            <h2 class="card-title">
+                <svg class="section-icon text-gold" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/><path d="M4 5v14.5A2.5 2.5 0 0 1 6.5 17H20M8 6h8M8 10h8"/></svg> Manage Contacts
+            </h2>
+            <div class="filter-controls">
+                <input type="text" id="contactSearchInput" class="form-control" placeholder="Search contacts...">
+                <input type="number" id="userIdFilter" class="form-control" placeholder="Filter by User ID">
+            </div>
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Owner User ID</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contactsTableBody">
+                        <tr><td colspan="6">Loading contacts...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Admin Action Panels -->
         <div class="admin-grid">
-            <!-- Suspend User / Admin -->
-            <div class="card">
+            <!-- Create User -->
+            <div class="card create-user-card">
                 <h2 class="card-title">
-                    <i class="bi bi-person-x-fill text-danger"></i> Suspend Account
+                    <svg class="section-icon text-gold" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M3 21v-2a6 6 0 0 1 12 0v2M19 8v6M16 11h6"/></svg> Create New User
                 </h2>
-                <div class="form-group">
-                    <label class="form-label" for="suspendUsername">Username or User ID</label>
-                    <input type="text" id="suspendUsername" class="form-control" placeholder="Enter user or admin name">
-                </div>
-                <div class="form-group form-check">
-                    <input type="checkbox" class="form-check-input" id="isAdminCheck">
-                    <label class="form-check-label" for="isAdminCheck">Target is an Admin</label>
-                </div>
-                <button class="btn btn-danger btn-full" onclick="alert('Suspend endpoint pending integration.');">
-                    Suspend Account
-                </button>
+                <form id="createUserForm">
+                    <div class="form-group">
+                        <label class="form-label" for="createFirstName">First Name</label>
+                        <input type="text" id="createFirstName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="createLastName">Last Name</label>
+                        <input type="text" id="createLastName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="createLogin">Login Username</label>
+                        <input type="text" id="createLogin" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="createPassword">Password</label>
+                        <input type="password" id="createPassword" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="createRole">Role</label>
+                        <select id="createRole" class="form-control">
+                            <option value="User">User</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                    </div>
+                    <div class="form-group form-check">
+                        <input type="checkbox" id="createActive" class="form-check-input" checked>
+                        <label class="form-check-label" for="createActive">Active Account</label>
+                    </div>
+                    <button type="submit" class="btn btn-gold btn-full">Create User</button>
+                </form>
             </div>
 
-            <!-- Password Reset -->
-            <div class="card">
-                <h2 class="card-title">
-                    <i class="bi bi-key-fill text-gold"></i> Reset User Password
-                </h2>
-                <div class="form-group">
-                    <label class="form-label" for="resetUsername">Target Username</label>
-                    <input type="text" id="resetUsername" class="form-control" placeholder="Enter username">
+        </div>
+
+        <dialog id="suspendUserModal" class="admin-modal">
+            <form id="suspendForm">
+                <div class="modal-header">
+                    <div>
+                        <h2 class="card-title"><svg class="section-icon text-danger" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M3 21v-2a6 6 0 0 1 12 0v2M16 11h6"/></svg> Suspend Account</h2>
+                        <p class="modal-description">This account will no longer be able to log in.</p>
+                    </div>
+                    <button type="button" class="modal-close" aria-label="Close" data-modal-close="suspendUserModal">&times;</button>
                 </div>
+                <div id="suspendUserInfo" class="modal-user-info"></div>
+                <div id="suspendActionMessage" class="status-msg" role="status" aria-live="polite" hidden></div>
+                <input type="hidden" id="suspendUserId">
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline-gold" data-modal-close="suspendUserModal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Suspend Account</button>
+                </div>
+            </form>
+        </dialog>
+
+        <dialog id="resetPasswordModal" class="admin-modal">
+            <form id="resetPasswordForm">
+                <div class="modal-header">
+                    <div>
+                        <h2 class="card-title"><svg class="section-icon text-gold" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="m10.85 12.15 8.65-8.65 2 2-2 2 2 2-3 3-2-2-3.8 3.8"/></svg> Reset User Password</h2>
+                        <p class="modal-description">Set a new password for this account.</p>
+                    </div>
+                    <button type="button" class="modal-close" aria-label="Close" data-modal-close="resetPasswordModal">&times;</button>
+                </div>
+                <div id="resetUserInfo" class="modal-user-info"></div>
+                <div id="resetActionMessage" class="status-msg" role="status" aria-live="polite" hidden></div>
+                <input type="hidden" id="resetUserId">
                 <div class="form-group">
                     <label class="form-label" for="newPasswordInput">New Password</label>
-                    <input type="password" id="newPasswordInput" class="form-control" placeholder="Enter new password">
+                    <input type="password" id="newPasswordInput" class="form-control" autocomplete="new-password" required>
                 </div>
-                <button class="btn btn-gold btn-full" onclick="alert('Password reset endpoint pending integration.');">
-                    Update Password
-                </button>
-            </div>
-        </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline-gold" data-modal-close="resetPasswordModal">Cancel</button>
+                    <button type="submit" class="btn btn-gold">Update Password</button>
+                </div>
+            </form>
+        </dialog>
     </main>
+
 </body>
 </html>

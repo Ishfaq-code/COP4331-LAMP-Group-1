@@ -31,11 +31,13 @@ import { saveCookie } from "./utility.js";
           alertBox.textContent = data.message || 'Successfully logged in!';
           alertBox.style.display = 'block';
 
-          saveCookie(data.data.firstName, data.data.lastName, data.data.id)
+          saveCookie(data.data.firstName, data.data.lastName, data.data.id, data.data.role)
 
-          // Redirect to the dashboard
+          const destination = data.data.role === 'Admin'
+            ? 'admin_dashbaord.html'
+            : 'dashboard.html';
           setTimeout(() => {
-            window.location.href = 'dashboard.html';
+            window.location.href = destination;
           }, 1000);
         } else {
           // Display backend error message in the alert box
