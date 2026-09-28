@@ -69,6 +69,14 @@ $lastName = trim($data["lastName"]);
 $login = trim($data["login"]);
 $role = $data["role"];
 $active = (int) $data["active"];
+$password = null;
+if (array_key_exists("password", $data)) {
+    if (!is_string($data["password"]) || trim($data["password"]) === "") {
+        http_response_code(400);
+        response(400, "The password must be a non-empty string.", null);
+    }
+    $password = $data["password"];
+}
 
 if ($firstName === "" || $lastName === "" || $login === "") {
     http_response_code(400);
@@ -82,23 +90,28 @@ if ($targetUserId === $userId && ($role !== "Admin" || $active !== 1)) {
 }
 
 try {
-    $query = $db->prepare(
-        "UPDATE Users
-         SET FirstName = :firstName,
-             LastName = :lastName,
-             Login = :login,
-             Role = :role,
-             Active = :active
-         WHERE ID = :id"
-    );
-    $query->execute([
+    $sql = "UPDATE Users
+            SET FirstName = :firstName,
+                LastName = :lastName,
+                Login = :login,
+                Role = :role,
+                Active = :active";
+    $params = [
         ":firstName" => $firstName,
         ":lastName" => $lastName,
         ":login" => $login,
         ":role" => $role,
         ":active" => $active,
         ":id" => $targetUserId
-    ]);
+    ];
+    if ($password !== null) {
+        $sql .= ", Password = :password";
+        $params[":password"] = password_hash($password, PASSWORD_DEFAULT);
+    }
+    $sql .= " WHERE ID = :id";
+
+    $query = $db->prepare($sql);
+    $query->execute($params);
 
     if ($query->rowCount() === 0) {
         $existsQuery = $db->prepare("SELECT ID FROM Users WHERE ID = :id");
