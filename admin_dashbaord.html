@@ -142,8 +142,8 @@
             <form id="suspendForm">
                 <div class="modal-header">
                     <div>
-                        <h2 class="card-title"><svg class="section-icon text-danger" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M3 21v-2a6 6 0 0 1 12 0v2M16 11h6"/></svg> Suspend Account</h2>
-                        <p class="modal-description">This account will no longer be able to log in.</p>
+                        <h2 class="card-title"><svg class="section-icon text-danger" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M3 21v-2a6 6 0 0 1 12 0v2M16 11h6"/></svg> <span id="statusModalTitle">Suspend Account</span></h2>
+                        <p id="statusModalDescription" class="modal-description">This account will no longer be able to log in.</p>
                     </div>
                     <button type="button" class="modal-close" aria-label="Close" data-modal-close="suspendUserModal">&times;</button>
                 </div>
@@ -152,7 +152,7 @@
                 <input type="hidden" id="suspendUserId">
                 <div class="modal-actions">
                     <button type="button" class="btn btn-outline-gold" data-modal-close="suspendUserModal">Cancel</button>
-                    <button type="submit" class="btn btn-danger">Suspend Account</button>
+                    <button id="statusSubmitButton" type="submit" class="btn btn-danger">Suspend Account</button>
                 </div>
             </form>
         </dialog>

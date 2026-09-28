@@ -94,7 +94,7 @@ async function fetchUsers() {
                 <td><span class="badge ${user.active ? "badge-active" : "badge-inactive"}">${user.active ? "Active" : "Suspended"}</span></td>
                 <td class="action-buttons-cell">
                     <div class="action-buttons">
-                        <button type="button" class="btn btn-sm btn-danger" data-user-action="suspend" data-user-id="${escapeHtml(user.id)}" ${user.active ? "" : "disabled"}>${user.active ? "Suspend" : "Suspended"}</button>
+                        <button type="button" class="btn btn-sm ${user.active ? "btn-danger" : "btn-outline-gold"}" data-user-action="suspend" data-user-id="${escapeHtml(user.id)}">${user.active ? "Suspend" : "Unsuspend"}</button>
                         <button type="button" class="btn btn-sm btn-outline-gold" data-user-action="reset-password" data-user-id="${escapeHtml(user.id)}">Reset Password</button>
                     </div>
                 </td>`;
@@ -175,7 +175,8 @@ async function suspendUser(event) {
     event.preventDefault();
     const targetId = document.getElementById("suspendUserId").value;
     const targetUser = usersById.get(String(targetId));
-    if (!targetUser || !targetUser.active) return;
+    if (!targetUser) return;
+    const newActiveStatus = Number(targetUser.active) === 1 ? 0 : 1;
 
     try {
         const response = await fetch("api/admin/update_user.php", {
@@ -187,13 +188,13 @@ async function suspendUser(event) {
                 lastName: targetUser.lastName,
                 login: targetUser.login,
                 role: targetUser.role,
-                active: 0
+                active: newActiveStatus
             })
         });
         const result = await response.json();
-        if (!response.ok) throw new Error(result.message || "Failed to suspend account");
+        if (!response.ok) throw new Error(result.message || "Failed to update account status");
 
-        showMessage("Account suspended successfully!");
+        showMessage(`Account ${newActiveStatus ? "unsuspended" : "suspended"} successfully!`);
         closeAdminModal("suspendUserModal");
         await fetchUsers();
     } catch (error) {
@@ -239,9 +240,18 @@ function formatUserInfo(user) {
 
 function openSuspendModal(userId) {
     const user = usersById.get(String(userId));
-    if (!user || !user.active) return;
+    if (!user) return;
     document.getElementById("suspendUserId").value = user.id;
     document.getElementById("suspendUserInfo").textContent = formatUserInfo(user);
+    const isActive = Boolean(Number(user.active));
+    document.getElementById("statusModalTitle").textContent = isActive ? "Suspend Account" : "Unsuspend Account";
+    document.getElementById("statusModalDescription").textContent = isActive
+        ? "This account will no longer be able to log in."
+        : "This account will be able to log in again.";
+    const submitButton = document.getElementById("statusSubmitButton");
+    submitButton.textContent = isActive ? "Suspend Account" : "Unsuspend Account";
+    submitButton.classList.toggle("btn-danger", isActive);
+    submitButton.classList.toggle("btn-outline-gold", !isActive);
     clearModalMessage("suspendActionMessage");
     document.getElementById("suspendUserModal").showModal();
 }
