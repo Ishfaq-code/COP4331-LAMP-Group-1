@@ -12,7 +12,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="css/admin.css" rel="stylesheet">
-    <script type="text/javascript" src="js/code.js"></script>
 </head>
 <body>
     <main class="container">
@@ -29,44 +28,335 @@
             </a>
         </div>
 
+        <div id="statusMessage" class="status-msg" style="display: none;"></div>
+
+        <!-- User Management Section -->
+        <div class="card mb-4">
+            <h2 class="card-title">
+                <i class="bi bi-people-fill text-gold"></i> Manage Users
+            </h2>
+            <div class="filter-controls">
+                <input type="text" id="userSearchInput" class="form-control" placeholder="Search by name or login..." oninput="fetchUsers()">
+                <div class="checkbox-group">
+                    <label class="form-check-label">
+                        <input type="checkbox" id="adminFilter" class="form-check-input" onchange="fetchUsers()"> Admin
+                    </label>
+                    <label class="form-check-label">
+                        <input type="checkbox" id="activeFilter" class="form-check-input" onchange="fetchUsers()"> Active
+                    </label>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Login</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr><td colspan="7">Loading users...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Contact Management Section -->
+        <div class="card mb-4">
+            <h2 class="card-title">
+                <i class="bi bi-journal-bookmark-fill text-gold"></i> Manage Contacts
+            </h2>
+            <div class="filter-controls">
+                <input type="text" id="contactSearchInput" class="form-control" placeholder="Search contacts..." oninput="fetchContacts()">
+                <input type="number" id="userIdFilter" class="form-control" placeholder="Filter by User ID" oninput="fetchContacts()">
+            </div>
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Owner User ID</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contactsTableBody">
+                        <tr><td colspan="6">Loading contacts...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <!-- Admin Action Panels -->
         <div class="admin-grid">
-            <!-- Suspend User / Admin -->
+            <!-- Create User -->
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="bi bi-person-plus-fill text-gold"></i> Create New User
+                </h2>
+                <form id="createUserForm" onsubmit="createUser(event)">
+                    <div class="form-group">
+                        <label class="form-label" for="createFirstName">First Name</label>
+                        <input type="text" id="createFirstName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="createLastName">Last Name</label>
+                        <input type="text" id="createLastName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="createLogin">Login Username</label>
+                        <input type="text" id="createLogin" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="createPassword">Password</label>
+                        <input type="password" id="createPassword" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="createRole">Role</label>
+                        <select id="createRole" class="form-control">
+                            <option value="User">User</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                    </div>
+                    <div class="form-group form-check">
+                        <input type="checkbox" id="createActive" class="form-check-input" checked>
+                        <label class="form-check-label" for="createActive">Active Account</label>
+                    </div>
+                    <button type="submit" class="btn btn-gold btn-full">Create User</button>
+                </form>
+            </div>
+
+            <!-- Suspend Account -->
             <div class="card">
                 <h2 class="card-title">
                     <i class="bi bi-person-x-fill text-danger"></i> Suspend Account
                 </h2>
-                <div class="form-group">
-                    <label class="form-label" for="suspendUsername">Username or User ID</label>
-                    <input type="text" id="suspendUsername" class="form-control" placeholder="Enter user or admin name">
-                </div>
-                <div class="form-group form-check">
-                    <input type="checkbox" class="form-check-input" id="isAdminCheck">
-                    <label class="form-check-label" for="isAdminCheck">Target is an Admin</label>
-                </div>
-                <button class="btn btn-danger btn-full" onclick="alert('Suspend endpoint pending integration.');">
-                    Suspend Account
-                </button>
+                <form id="suspendForm" onsubmit="suspendUser(event)">
+                    <div class="form-group">
+                        <label class="form-label" for="suspendUserId">Target User ID</label>
+                        <input type="number" id="suspendUserId" class="form-control" placeholder="Enter User ID" required>
+                    </div>
+                    <button type="submit" class="btn btn-danger btn-full">Suspend Account</button>
+                </form>
             </div>
 
-            <!-- Password Reset -->
+            <!-- Reset Password -->
             <div class="card">
                 <h2 class="card-title">
                     <i class="bi bi-key-fill text-gold"></i> Reset User Password
                 </h2>
-                <div class="form-group">
-                    <label class="form-label" for="resetUsername">Target Username</label>
-                    <input type="text" id="resetUsername" class="form-control" placeholder="Enter username">
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="newPasswordInput">New Password</label>
-                    <input type="password" id="newPasswordInput" class="form-control" placeholder="Enter new password">
-                </div>
-                <button class="btn btn-gold btn-full" onclick="alert('Password reset endpoint pending integration.');">
-                    Update Password
-                </button>
+                <form id="resetPasswordForm" onsubmit="resetPassword(event)">
+                    <div class="form-group">
+                        <label class="form-label" for="resetUserId">Target User ID</label>
+                        <input type="number" id="resetUserId" class="form-control" placeholder="Enter User ID" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="newPasswordInput">New Password</label>
+                        <input type="password" id="newPasswordInput" class="form-control" placeholder="Enter new password" required>
+                    </div>
+                    <button type="submit" class="btn btn-gold btn-full">Update Password</button>
+                </form>
             </div>
         </div>
     </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchUsers();
+            fetchContacts();
+        });
+
+        function showMessage(text, isError = false) {
+            const msgBox = document.getElementById("statusMessage");
+            msgBox.style.display = "block";
+            msgBox.className = `status-msg ${isError ? 'status-error' : 'status-success'}`;
+            msgBox.textContent = text;
+            setTimeout(() => { msgBox.style.display = "none"; }, 5000);
+        }
+
+        // 1. Fetch users with search bar & "Admin" / "Active" checkboxes
+        async function fetchUsers() {
+            const search = document.getElementById("userSearchInput").value.trim();
+            const isAdmin = document.getElementById("adminFilter").checked;
+            const isActive = document.getElementById("activeFilter").checked;
+
+            const params = new URLSearchParams();
+            if (search) params.append("search", search);
+            if (isAdmin) params.append("isAdmin", "true");
+            if (isActive) params.append("isActive", "true");
+
+            try {
+                const res = await fetch(`/api/users.php?${params.toString()}`);
+                const result = await res.json();
+                if (!res.ok) throw new Error(result.message || "Failed to fetch users");
+
+                const tbody = document.getElementById("usersTableBody");
+                tbody.innerHTML = "";
+
+                if (!result.data || result.data.length === 0) {
+                    tbody.innerHTML = "<tr><td colspan='7'>No users found.</td></tr>";
+                    return;
+                }
+
+                result.data.forEach(user => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td>${user.id}</td>
+                        <td>${user.firstName}</td>
+                        <td>${user.lastName}</td>
+                        <td>${user.login}</td>
+                        <td>${user.role}</td>
+                        <td><span class="badge ${user.active ? 'badge-active' : 'badge-inactive'}">${user.active ? 'Active' : 'Inactive'}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-gold" onclick="fillUserAction(${user.id})">Select</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                showMessage(err.message, true);
+            }
+        }
+
+        // 2. Fetch contacts with contact search & filter by user ID
+        async function fetchContacts() {
+            const search = document.getElementById("contactSearchInput").value.trim();
+            const userId = document.getElementById("userIdFilter").value.trim();
+
+            const params = new URLSearchParams();
+            if (search) params.append("search", search);
+            if (userId) params.append("userId", userId);
+
+            try {
+                const res = await fetch(`/api/contacts.php?${params.toString()}`);
+                const result = await res.json();
+                if (!res.ok) throw new Error(result.message || "Failed to fetch contacts");
+
+                const tbody = document.getElementById("contactsTableBody");
+                tbody.innerHTML = "";
+
+                if (!result.data || result.data.length === 0) {
+                    tbody.innerHTML = "<tr><td colspan='6'>No contacts found.</td></tr>";
+                    return;
+                }
+
+                result.data.forEach(contact => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td>${contact.ID}</td>
+                        <td>${contact.FirstName || ''}</td>
+                        <td>${contact.LastName || ''}</td>
+                        <td>${contact.EmailAddress || ''}</td>
+                        <td>${contact.PhoneNumber || ''}</td>
+                        <td>${contact.UserID}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                showMessage(err.message, true);
+            }
+        }
+
+        // 3. Create User in Database
+        async function createUser(e) {
+            e.preventDefault();
+            const payload = {
+                firstName: document.getElementById("createFirstName").value.trim(),
+                lastName: document.getElementById("createLastName").value.trim(),
+                login: document.getElementById("createLogin").value.trim(),
+                password: document.getElementById("createPassword").value,
+                role: document.getElementById("createRole").value,
+                active: document.getElementById("createActive").checked ? 1 : 0
+            };
+
+            try {
+                const res = await fetch("/api/register.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                const result = await res.json();
+                if (!res.ok) throw new Error(result.message || "Failed to create user");
+
+                showMessage("User created successfully!");
+                document.getElementById("createUserForm").reset();
+                fetchUsers();
+            } catch (err) {
+                showMessage(err.message, true);
+            }
+        }
+
+        // 4. Suspend Account (Updates active status via PUT /api/updateUser.php)
+        async function suspendUser(e) {
+            e.preventDefault();
+            const targetId = parseInt(document.getElementById("suspendUserId").value, 10);
+            if (!targetId) return;
+
+            try {
+                const userRes = await fetch(`/api/users.php?search=`);
+                const userData = await userRes.json();
+                const targetUser = userData.data ? userData.data.find(u => u.id === targetId) : null;
+
+                if (!targetUser) throw new Error("Target user not found");
+
+                const payload = {
+                    id: targetUser.id,
+                    firstName: targetUser.firstName,
+                    lastName: targetUser.lastName,
+                    login: targetUser.login,
+                    role: targetUser.role,
+                    active: 0
+                };
+
+                const res = await fetch("/api/updateUser.php", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                const result = await res.json();
+                if (!res.ok) throw new Error(result.message || "Failed to suspend account");
+
+                showMessage("Account suspended successfully!");
+                document.getElementById("suspendForm").reset();
+                fetchUsers();
+            } catch (err) {
+                showMessage(err.message, true);
+            }
+        }
+
+        // 5. Reset Password (Calls POST /api/resetPassword.php)
+        async function resetPassword(e) {
+            e.preventDefault();
+            const targetId = parseInt(document.getElementById("resetUserId").value, 10);
+            const newPassword = document.getElementById("newPasswordInput").value;
+
+            try {
+                const res = await fetch("/api/resetPassword.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ id: targetId, password: newPassword })
+                });
+                const result = await res.json();
+                if (!res.ok) throw new Error(result.message || "Failed to reset password");
+
+                showMessage("Password updated successfully!");
+                document.getElementById("resetPasswordForm").reset();
+            } catch (err) {
+                showMessage(err.message, true);
+            }
+        }
+
+        function fillUserAction(userId) {
+            document.getElementById("suspendUserId").value = userId;
+            document.getElementById("resetUserId").value = userId;
+        }
+    </script>
 </body>
 </html>
