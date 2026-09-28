@@ -28,7 +28,7 @@ if ($login === "" || !is_string($password) || $password === ''){
 try{
     $db = getDB();
     if ($db){
-        $query = $db->prepare("SELECT ID, FirstName, LastName, Login, Password FROM Users WHERE Login = :login");
+        $query = $db->prepare("SELECT ID, FirstName, LastName, Login, Password, Role FROM Users WHERE Login = :login");
         $query->execute([":login" => $login]);
         $user = $query->fetch();
 
