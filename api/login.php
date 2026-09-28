@@ -28,11 +28,15 @@ if ($login === "" || !is_string($password) || $password === ''){
 try{
     $db = getDB();
     if ($db){
-        $query = $db->prepare("SELECT ID, FirstName, LastName, Login, Password, Role FROM Users WHERE Login = :login");
+        $query = $db->prepare("SELECT ID, FirstName, LastName, Login, Password, Role, Active FROM Users WHERE Login = :login");
         $query->execute([":login" => $login]);
         $user = $query->fetch();
 
         if($user) {
+            if($user["Active"] == 0){
+                http_response_code(403);
+                response(403, "User is suspended from the application and thus cannot log in!", null);
+            }
             if (password_verify($password, $user["Password"])) {
                 http_response_code(200);
                 response(200, "Successfully logged in!", ["id" => $user["ID"], "firstName" => $user["FirstName"], "lastName" => $user["LastName"], "login" => $user["Login"], "role" => $user["Role"]]);
