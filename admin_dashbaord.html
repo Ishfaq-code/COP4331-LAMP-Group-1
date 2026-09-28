@@ -4,14 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
     <link href="css/admin.css" rel="stylesheet">
+    <script src="js/admin_dashboard.js" defer></script>
 </head>
 <body>
     <main class="container">
@@ -19,27 +13,27 @@
         <div class="header">
             <div class="header-left">
                 <div class="app-icon">
-                    <i class="bi bi-shield-lock-fill"></i>
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
                 </div>
                 <h1 class="title">Admin Dashboard</h1>
             </div>
             <a href="dashboard.html" class="btn btn-outline-gold">
-                <i class="bi bi-arrow-left"></i> Back to Contacts
+                <span aria-hidden="true">←</span> Back to Contacts
             </a>
         </div>
 
-        <div id="statusMessage" class="status-msg" style="display: none;"></div>
+        <div id="statusMessage" class="status-msg" hidden></div>
 
         <!-- User Management Section -->
         <div class="card mb-4">
             <h2 class="card-title">
-                <i class="bi bi-people-fill text-gold"></i> Manage Users
+                <svg class="section-icon text-gold" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg> Manage Users
             </h2>
             <div class="filter-controls">
-                <input type="text" id="userSearchInput" class="form-control" placeholder="Search by name or login..." oninput="fetchUsers()">
+                <input type="text" id="userSearchInput" class="form-control" placeholder="Search by name or login...">
                 <div class="filter-select-group">
                     <label class="filter-label" for="adminFilter">Role</label>
-                    <select id="adminFilter" class="form-control" aria-label="Filter users by role" onchange="fetchUsers()">
+                    <select id="adminFilter" class="form-control" aria-label="Filter users by role">
                         <option value="all">All</option>
                         <option value="admin">Admin</option>
                         <option value="non-admin">Non-Admin</option>
@@ -47,7 +41,7 @@
                 </div>
                 <div class="filter-select-group">
                     <label class="filter-label" for="activeFilter">Status</label>
-                    <select id="activeFilter" class="form-control" aria-label="Filter users by account status" onchange="fetchUsers()">
+                    <select id="activeFilter" class="form-control" aria-label="Filter users by account status">
                         <option value="all">All</option>
                         <option value="active">Active</option>
                         <option value="suspended">Suspended</option>
@@ -77,11 +71,11 @@
         <!-- Contact Management Section -->
         <div class="card mb-4">
             <h2 class="card-title">
-                <i class="bi bi-journal-bookmark-fill text-gold"></i> Manage Contacts
+                <svg class="section-icon text-gold" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/><path d="M4 5v14.5A2.5 2.5 0 0 1 6.5 17H20M8 6h8M8 10h8"/></svg> Manage Contacts
             </h2>
             <div class="filter-controls">
-                <input type="text" id="contactSearchInput" class="form-control" placeholder="Search contacts..." oninput="fetchContacts()">
-                <input type="number" id="userIdFilter" class="form-control" placeholder="Filter by User ID" oninput="fetchContacts()">
+                <input type="text" id="contactSearchInput" class="form-control" placeholder="Search contacts...">
+                <input type="number" id="userIdFilter" class="form-control" placeholder="Filter by User ID">
             </div>
             <div class="table-responsive">
                 <table class="data-table">
@@ -107,9 +101,9 @@
             <!-- Create User -->
             <div class="card create-user-card">
                 <h2 class="card-title">
-                    <i class="bi bi-person-plus-fill text-gold"></i> Create New User
+                    <svg class="section-icon text-gold" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M3 21v-2a6 6 0 0 1 12 0v2M19 8v6M16 11h6"/></svg> Create New User
                 </h2>
-                <form id="createUserForm" onsubmit="createUser(event)">
+                <form id="createUserForm">
                     <div class="form-group">
                         <label class="form-label" for="createFirstName">First Name</label>
                         <input type="text" id="createFirstName" class="form-control" required>
@@ -144,32 +138,32 @@
         </div>
 
         <dialog id="suspendUserModal" class="admin-modal">
-            <form id="suspendForm" onsubmit="suspendUser(event)">
+            <form id="suspendForm">
                 <div class="modal-header">
                     <div>
-                        <h2 class="card-title"><i class="bi bi-person-x-fill text-danger"></i> Suspend Account</h2>
+                        <h2 class="card-title"><svg class="section-icon text-danger" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M3 21v-2a6 6 0 0 1 12 0v2M16 11h6"/></svg> Suspend Account</h2>
                         <p class="modal-description">This account will no longer be able to log in.</p>
                     </div>
-                    <button type="button" class="modal-close" aria-label="Close" onclick="closeAdminModal('suspendUserModal')">&times;</button>
+                    <button type="button" class="modal-close" aria-label="Close" data-modal-close="suspendUserModal">&times;</button>
                 </div>
                 <div id="suspendUserInfo" class="modal-user-info"></div>
                 <div id="suspendActionMessage" class="status-msg" role="status" aria-live="polite" hidden></div>
                 <input type="hidden" id="suspendUserId">
                 <div class="modal-actions">
-                    <button type="button" class="btn btn-outline-gold" onclick="closeAdminModal('suspendUserModal')">Cancel</button>
+                    <button type="button" class="btn btn-outline-gold" data-modal-close="suspendUserModal">Cancel</button>
                     <button type="submit" class="btn btn-danger">Suspend Account</button>
                 </div>
             </form>
         </dialog>
 
         <dialog id="resetPasswordModal" class="admin-modal">
-            <form id="resetPasswordForm" onsubmit="resetPassword(event)">
+            <form id="resetPasswordForm">
                 <div class="modal-header">
                     <div>
-                        <h2 class="card-title"><i class="bi bi-key-fill text-gold"></i> Reset User Password</h2>
+                        <h2 class="card-title"><svg class="section-icon text-gold" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="m10.85 12.15 8.65-8.65 2 2-2 2 2 2-3 3-2-2-3.8 3.8"/></svg> Reset User Password</h2>
                         <p class="modal-description">Set a new password for this account.</p>
                     </div>
-                    <button type="button" class="modal-close" aria-label="Close" onclick="closeAdminModal('resetPasswordModal')">&times;</button>
+                    <button type="button" class="modal-close" aria-label="Close" data-modal-close="resetPasswordModal">&times;</button>
                 </div>
                 <div id="resetUserInfo" class="modal-user-info"></div>
                 <div id="resetActionMessage" class="status-msg" role="status" aria-live="polite" hidden></div>
@@ -179,271 +173,12 @@
                     <input type="password" id="newPasswordInput" class="form-control" autocomplete="new-password" required>
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn btn-outline-gold" onclick="closeAdminModal('resetPasswordModal')">Cancel</button>
+                    <button type="button" class="btn btn-outline-gold" data-modal-close="resetPasswordModal">Cancel</button>
                     <button type="submit" class="btn btn-gold">Update Password</button>
                 </div>
             </form>
         </dialog>
     </main>
 
-    <script>
-        const usersById = new Map();
-
-        document.addEventListener("DOMContentLoaded", () => {
-            fetchUsers();
-            fetchContacts();
-        });
-
-        function showMessage(text, isError = false) {
-            const msgBox = document.getElementById("statusMessage");
-            msgBox.style.display = "block";
-            msgBox.className = `status-msg ${isError ? 'status-error' : 'status-success'}`;
-            msgBox.textContent = text;
-            setTimeout(() => { msgBox.style.display = "none"; }, 5000);
-        }
-
-        function getAuthHeaders(includeJson = false) {
-            const userId = document.cookie.match(/(?:^|,)\s*userId=(\d+)/)?.[1];
-            if (!userId) {
-                window.location.href = "index.html";
-                throw new Error("Please log in again.");
-            }
-
-            return {
-                ...(includeJson ? { "Content-Type": "application/json" } : {}),
-                Authorization: `Bearer ${userId}`
-            };
-        }
-
-        // 1. Fetch users with search and role/status filters
-        async function fetchUsers() {
-            const search = document.getElementById("userSearchInput").value.trim();
-            const roleFilter = document.getElementById("adminFilter").value;
-            const statusFilter = document.getElementById("activeFilter").value;
-
-            const params = new URLSearchParams();
-            if (search) params.append("search", search);
-            if (roleFilter !== "all") params.append("isAdmin", roleFilter === "admin" ? "true" : "false");
-            if (statusFilter !== "all") params.append("isActive", statusFilter === "active" ? "true" : "false");
-
-            try {
-                const res = await fetch(`api/admin/get_users.php?${params.toString()}`, {
-                    headers: getAuthHeaders()
-                });
-                const result = await res.json();
-                if (!res.ok) throw new Error(result.message || "Failed to fetch users");
-
-                const tbody = document.getElementById("usersTableBody");
-                tbody.innerHTML = "";
-                usersById.clear();
-
-                if (!result.data || result.data.length === 0) {
-                    tbody.innerHTML = "<tr><td colspan='7'>No users found.</td></tr>";
-                    return;
-                }
-
-                result.data.forEach(user => {
-                    usersById.set(String(user.id), user);
-                    const tr = document.createElement("tr");
-                    tr.innerHTML = `
-                        <td>${user.id}</td>
-                        <td>${user.firstName}</td>
-                        <td>${user.lastName}</td>
-                        <td>${user.login}</td>
-                        <td>${user.role}</td>
-                        <td><span class="badge ${user.active ? 'badge-active' : 'badge-inactive'}">${user.active ? 'Active' : 'Inactive'}</span></td>
-                        <td class="action-buttons-cell">
-                            <div class="action-buttons">
-                                <button class="btn btn-sm btn-danger" onclick="openSuspendModal(${user.id})" ${user.active ? "" : "disabled"}>${user.active ? "Suspend" : "Suspended"}</button>
-                                <button class="btn btn-sm btn-outline-gold" onclick="openResetPasswordModal(${user.id})">Reset Password</button>
-                            </div>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch (err) {
-                showMessage(err.message, true);
-            }
-        }
-
-        // 2. Fetch contacts with contact search & filter by user ID
-        async function fetchContacts() {
-            const search = document.getElementById("contactSearchInput").value.trim();
-            const userId = document.getElementById("userIdFilter").value.trim();
-
-            const params = new URLSearchParams();
-            if (search) params.append("search", search);
-            if (userId) params.append("userId", userId);
-
-            try {
-                const res = await fetch(`api/admin/get_contacts.php?${params.toString()}`, {
-                    headers: getAuthHeaders()
-                });
-                const result = await res.json();
-                if (!res.ok) throw new Error(result.message || "Failed to fetch contacts");
-
-                const tbody = document.getElementById("contactsTableBody");
-                tbody.innerHTML = "";
-
-                if (!result.data || result.data.length === 0) {
-                    tbody.innerHTML = "<tr><td colspan='6'>No contacts found.</td></tr>";
-                    return;
-                }
-
-                result.data.forEach(contact => {
-                    const tr = document.createElement("tr");
-                    tr.innerHTML = `
-                        <td>${contact.ID}</td>
-                        <td>${contact.FirstName || ''}</td>
-                        <td>${contact.LastName || ''}</td>
-                        <td>${contact.EmailAddress || ''}</td>
-                        <td>${contact.PhoneNumber || ''}</td>
-                        <td>${contact.UserID}</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch (err) {
-                showMessage(err.message, true);
-            }
-        }
-
-        // 3. Create User in Database
-        async function createUser(e) {
-            e.preventDefault();
-            const payload = {
-                firstName: document.getElementById("createFirstName").value.trim(),
-                lastName: document.getElementById("createLastName").value.trim(),
-                login: document.getElementById("createLogin").value.trim(),
-                password: document.getElementById("createPassword").value,
-                role: document.getElementById("createRole").value,
-                active: document.getElementById("createActive").checked ? 1 : 0
-            };
-
-            try {
-                const res = await fetch("api/admin/create_user.php", {
-                    method: "POST",
-                    headers: getAuthHeaders(true),
-                    body: JSON.stringify(payload)
-                });
-                const result = await res.json();
-                if (!res.ok) throw new Error(result.message || "Failed to create user");
-
-                showMessage("User created successfully!");
-                document.getElementById("createUserForm").reset();
-                fetchUsers();
-            } catch (err) {
-                showMessage(err.message, true);
-            }
-        }
-
-        // 4. Suspend Account (Updates active status via PUT api/admin/update_user.php)
-        async function suspendUser(e) {
-            e.preventDefault();
-            const targetId = parseInt(document.getElementById("suspendUserId").value, 10);
-            if (!targetId) return;
-
-            try {
-                const targetUser = usersById.get(String(targetId));
-                if (!targetUser) throw new Error("Target user not found");
-
-                const payload = {
-                    id: targetUser.id,
-                    firstName: targetUser.firstName,
-                    lastName: targetUser.lastName,
-                    login: targetUser.login,
-                    role: targetUser.role,
-                    active: 0
-                };
-
-                const res = await fetch("api/admin/update_user.php", {
-                    method: "PUT",
-                    headers: getAuthHeaders(true),
-                    body: JSON.stringify(payload)
-                });
-                const result = await res.json();
-                if (!res.ok) throw new Error(result.message || "Failed to suspend account");
-
-                showMessage("Account suspended successfully!");
-                closeAdminModal("suspendUserModal");
-                await fetchUsers();
-            } catch (err) {
-                showModalMessage("suspendActionMessage", err.message);
-            }
-        }
-
-        // 5. Reset Password through the user update endpoint
-        async function resetPassword(e) {
-            e.preventDefault();
-            const targetId = parseInt(document.getElementById("resetUserId").value, 10);
-            const newPassword = document.getElementById("newPasswordInput").value;
-
-            try {
-                const targetUser = usersById.get(String(targetId));
-                if (!targetUser) throw new Error("Target user not found");
-
-                const res = await fetch("api/admin/update_user.php", {
-                    method: "PUT",
-                    headers: getAuthHeaders(true),
-                    body: JSON.stringify({
-                        id: targetUser.id,
-                        firstName: targetUser.firstName,
-                        lastName: targetUser.lastName,
-                        login: targetUser.login,
-                        role: targetUser.role,
-                        active: targetUser.active,
-                        password: newPassword
-                    })
-                });
-                const result = await res.json();
-                if (!res.ok) throw new Error(result.message || "Failed to reset password");
-
-                showMessage("Password updated successfully!");
-                document.getElementById("resetPasswordForm").reset();
-                closeAdminModal("resetPasswordModal");
-            } catch (err) {
-                showModalMessage("resetActionMessage", err.message);
-            }
-        }
-
-        function formatUserInfo(user) {
-            return `User #${user.id} · ${user.firstName} ${user.lastName} (${user.login})`;
-        }
-
-        function openSuspendModal(userId) {
-            const user = usersById.get(String(userId));
-            if (!user || !user.active) return;
-            document.getElementById("suspendUserId").value = user.id;
-            document.getElementById("suspendUserInfo").textContent = formatUserInfo(user);
-            clearModalMessage("suspendActionMessage");
-            document.getElementById("suspendUserModal").showModal();
-        }
-
-        function openResetPasswordModal(userId) {
-            const user = usersById.get(String(userId));
-            if (!user) return;
-            document.getElementById("resetUserId").value = user.id;
-            document.getElementById("resetUserInfo").textContent = formatUserInfo(user);
-            clearModalMessage("resetActionMessage");
-            document.getElementById("resetPasswordModal").showModal();
-            document.getElementById("newPasswordInput").focus();
-        }
-
-        function closeAdminModal(modalId) {
-            document.getElementById(modalId).close();
-        }
-
-        function showModalMessage(elementId, message) {
-            const element = document.getElementById(elementId);
-            element.textContent = message;
-            element.className = "status-msg status-error";
-            element.hidden = false;
-        }
-
-        function clearModalMessage(elementId) {
-            const element = document.getElementById(elementId);
-            element.textContent = "";
-            element.hidden = true;
-        }
-    </script>
 </body>
 </html>

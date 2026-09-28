@@ -85,6 +85,17 @@ button {
     box-shadow: 0 0 15px rgba(212, 175, 55, 0.12);
 }
 
+.app-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.section-icon {
+    width: 20px;
+    height: 20px;
+    flex: 0 0 20px;
+}
+
 .title {
     margin: 0;
     font-size: 25px;
