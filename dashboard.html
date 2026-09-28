@@ -3,9 +3,9 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Contact Manager</title>
+	<title>UCF Professor Contact Manager</title>
 	<link rel="stylesheet" href="css/dashboard.css">
-	<script type="module" src="js/dashboard.js" defer></script>
+	<!-- <script type="module" src="js/dashboard.js" defer></script> -->
 </head>
 <body>
 	<main class="container">
@@ -20,7 +20,7 @@
 					</svg>
 				</div>
 				<h1 class="title">
-					Contact Manager
+					UCF Professor Contact Manager
 				</h1>
 			</div>
 			<div id="loggedInDiv" class="user-bar">
@@ -33,7 +33,7 @@
 					<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 						<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
 					</svg>
-					Admin Panel
+					Faculty Admin Panel
 				</a>
 				<button
 					type="button"
@@ -62,7 +62,7 @@
 							<path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
 						</svg>
 					</span>
-					My Contacts
+					My Professors
 				</h2>
 				<button
 					type="button"
@@ -75,7 +75,7 @@
 						<line x1="20" y1="8" x2="20" y2="14"></line>
 						<line x1="17" y1="11" x2="23" y2="11"></line>
 					</svg>
-					Add Contact
+					Add Professor
 				</button>
 			</div>
 			<div class="section-card">
@@ -83,7 +83,7 @@
 					for="searchText"
 					class="section-label"
 				>
-					Search Contacts
+					Search Professors
 				</label>
 				<div class="input-group">
 					<span class="input-icon">
@@ -96,14 +96,14 @@
 						type="text"
 						id="searchText"
 						class="form-control"
-						placeholder="Search by name or number..."
+						placeholder="Search by professor name or office phone..."
 						onkeyup="searchContacts();"
 					>
 				</div>
 			</div>
 			<div class="section-card">
 				<label class="section-label">
-					Saved Contacts
+					Saved Professor Contacts
 				</label>
 				<div
 					id="contactList"
@@ -133,7 +133,7 @@
 							<line x1="20" y1="8" x2="20" y2="14"></line>
 							<line x1="17" y1="11" x2="23" y2="11"></line>
 						</svg>
-						Add Contact
+						Add Professor Contact
 					</h2>
 					<button
 						type="button"
@@ -156,7 +156,7 @@
 							type="text"
 							id="contactFirstNameInput"
 							class="form-control"
-							placeholder="Enter first name"
+							placeholder="e.g. John"
 							required
 						>
 					</div>
@@ -171,7 +171,7 @@
 							type="text"
 							id="contactLastNameInput"
 							class="form-control"
-							placeholder="Enter last name"
+							placeholder="e.g. Smith (or COP3502)"
 							required
 						>
 					</div>
@@ -180,13 +180,13 @@
 							for="contactEmailInput"
 							class="form-label"
 						>
-							Email
+							UCF Email
 						</label>
 						<input
 							type="email"
 							id="contactEmailInput"
 							class="form-control"
-							placeholder="Enter email address"
+							placeholder="professor@ucf.edu"
 							required
 						>
 					</div>
@@ -195,13 +195,13 @@
 							for="contactPhoneInput"
 							class="form-label"
 						>
-							Phone Number
+							Office Phone / Location
 						</label>
 						<input
 							type="text"
 							id="contactPhoneInput"
 							class="form-control"
-							placeholder="Enter phone number"
+							placeholder="e.g. (407) 823-0000 or HEC 210"
 						>
 					</div>
 					<div
@@ -222,7 +222,7 @@
 						class="btn btn-gold"
 						onclick="addContactMock();"
 					>
-						Save Contact
+						Save Professor
 					</button>
 				</div>
 			</div>
@@ -242,7 +242,7 @@
 						class="modal-title"
 						id="editContactModalLabel"
 					>
-						Edit Contact
+						Edit Professor Contact
 					</h2>
 					<button
 						type="button"
@@ -263,11 +263,11 @@
 						<input type="text" id="editLastNameInput" class="form-control" required>
 					</div>
 					<div class="form-group">
-						<label for="editEmailInput" class="form-label">Email</label>
+						<label for="editEmailInput" class="form-label">UCF Email</label>
 						<input type="email" id="editEmailInput" class="form-control" required>
 					</div>
 					<div class="form-group">
-						<label for="editPhoneInput" class="form-label">Phone Number</label>
+						<label for="editPhoneInput" class="form-label">Office Phone / Location</label>
 						<input type="text" id="editPhoneInput" class="form-control" required>
 					</div>
 					<div id="editContactMsg" class="error-message"></div>
@@ -311,7 +311,7 @@
 							<line x1="18" y1="8" x2="23" y2="13"></line>
 							<line x1="23" y1="8" x2="18" y2="13"></line>
 						</svg>
-						Delete Contact
+						Remove Professor
 					</h2>
 					<button
 						type="button"
@@ -324,11 +324,11 @@
 				</div>
 				<div class="modal-body">
 					<p class="delete-message">
-						Are you sure you want to delete
+						Are you sure you want to remove professor
 						<strong id="deleteTargetName"></strong>?
 					</p>
 					<span class="delete-warning">
-						This action cannot be undone.
+						This contact will be removed from your list.
 					</span>
 				</div>
 				<div class="modal-footer">
@@ -344,7 +344,7 @@
 						class="btn btn-danger btn-small"
 						onclick="confirmDeleteContact();"
 					>
-						Delete
+						Remove
 					</button>
 				</div>
 			</div>

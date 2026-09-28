@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link href="css/admin.css" rel="stylesheet">
-    <script src="js/admin_dashboard.js" defer></script>
+    <!-- <script src="js/admin_dashboard.js" defer></script> -->
 </head>
 <body>
     <main class="container">
@@ -15,11 +15,8 @@
                 <div class="app-icon">
                 <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
                 </div>
-                <h1 class="title">Admin Dashboard</h1>
+                <h1 class="title">Faculty and Staff Admin Dashboard</h1>
             </div>
-            <a href="dashboard.html" class="btn btn-outline-gold">
-                <span aria-hidden="true">←</span> Back to Contacts
-            </a>
         </div>
 
         <div id="statusMessage" class="status-msg" hidden></div>
@@ -27,10 +24,10 @@
         <!-- User Management Section -->
         <div class="card mb-4">
             <h2 class="card-title">
-                <svg class="section-icon text-gold" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg> Manage Users
+                <svg class="section-icon text-gold" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg> Manage Student and Staff Accounts
             </h2>
             <div class="filter-controls">
-                <input type="text" id="userSearchInput" class="form-control" placeholder="Search by name or login...">
+                <input type="text" id="userSearchInput" class="form-control" placeholder="Search by Name or Username...">
                 <div class="filter-select-group">
                     <label class="filter-label" for="adminFilter">Role</label>
                     <select id="adminFilter" class="form-control" aria-label="Filter users by role">
@@ -62,7 +59,7 @@
                         </tr>
                     </thead>
                     <tbody id="usersTableBody">
-                        <tr><td colspan="7">Loading users...</td></tr>
+                        <tr><td colspan="7">Loading Users...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -71,11 +68,11 @@
         <!-- Contact Management Section -->
         <div class="card mb-4">
             <h2 class="card-title">
-                <svg class="section-icon text-gold" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/><path d="M4 5v14.5A2.5 2.5 0 0 1 6.5 17H20M8 6h8M8 10h8"/></svg> Manage Contacts
+                <svg class="section-icon text-gold" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/><path d="M4 5v14.5A2.5 2.5 0 0 1 6.5 17H20M8 6h8M8 10h8"/></svg> Manage Professor Contact Connections
             </h2>
             <div class="filter-controls">
-                <input type="text" id="contactSearchInput" class="form-control" placeholder="Search contacts...">
-                <input type="number" id="userIdFilter" class="form-control" placeholder="Filter by User ID">
+                <input type="text" id="contactSearchInput" class="form-control" placeholder="Search Professor Contacts...">
+                <input type="number" id="userIdFilter" class="form-control" placeholder="Filter by Student ID">
             </div>
             <div class="table-responsive">
                 <table class="data-table">
@@ -90,7 +87,7 @@
                         </tr>
                     </thead>
                     <tbody id="contactsTableBody">
-                        <tr><td colspan="6">Loading contacts...</td></tr>
+                        <tr><td colspan="6">Loading Professor Contacts...</td></tr>
                     </tbody>
                 </table>
             </div>
