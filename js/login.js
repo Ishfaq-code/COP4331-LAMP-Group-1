@@ -27,10 +27,6 @@ import { saveCookie } from "./utility.js";
         const data = await response.json();
 
         if (response.ok) {
-          alertBox.className = 'alert alert-success';
-          alertBox.textContent = data.message || 'Successfully logged in!';
-          alertBox.style.display = 'block';
-
           saveCookie(data.data.firstName, data.data.lastName, data.data.id, data.data.role)
 
           const destination = data.data.role === 'Admin'

@@ -86,7 +86,6 @@ async function fetchUsers(userId, searchTerm = '') {
 
         if (response.status === 200) {
             renderContacts(Array.isArray(data.data) ? data.data : [])
-            showAlert(alertBox, 'alert-success', data.message || 'Contacts retrieved successfully.')
             return data
         }
 
@@ -246,7 +245,7 @@ async function contactRequest(endpoint, method, userId, body, expectedStatus) {
         const data = await response.json()
 
         if (response.status === expectedStatus) {
-            showAlert(alertBox, 'alert-success', data.message || 'Contact request succeeded.')
+            alertBox.style.display = 'none'
         } else {
             showAlert(alertBox, 'alert-error', data.message || 'Contact request failed.')
         }
