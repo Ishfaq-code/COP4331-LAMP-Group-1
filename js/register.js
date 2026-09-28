@@ -40,9 +40,6 @@ document.getElementById('registerForm').addEventListener('submit', async functio
         const data = await response.json();
 
         if (response.ok) {
-            alertBox.className = 'alert alert-success';
-            alertBox.textContent = data.message || 'Successfully registered!';
-            alertBox.style.display = 'block';
             saveCookie(data.data.firstName, data.data.lastName, data.data.id)
 
             // Optionally redirect after success

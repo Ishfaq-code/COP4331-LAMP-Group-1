@@ -146,6 +146,72 @@ button {
     margin-bottom: 24px;
 }
 
+.stats-section {
+    gap: 22px;
+}
+
+.stats-section .card-title {
+    margin-bottom: 0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.stat-card {
+    display: flex;
+    min-height: 86px;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    padding: 15px;
+    background: rgba(212, 175, 55, 0.06);
+    border: 1px solid rgba(212, 175, 55, 0.22);
+    border-radius: 10px;
+}
+
+.stat-label {
+    color: var(--gray);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.stat-value {
+    color: var(--gold-light);
+    font-size: 25px;
+    line-height: 1;
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.chart-panel {
+    min-width: 0;
+    padding: 18px;
+    background: rgba(0, 0, 0, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 10px;
+}
+
+.chart-title {
+    margin: 0 0 12px;
+    color: var(--gray);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.chart-container {
+    position: relative;
+    height: 220px;
+}
+
 .card-title {
     display: flex;
     align-items: center;
@@ -553,6 +619,14 @@ button {
         width: 100%;
     }
 
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+
     .mb-4 {
         margin-bottom: 16px;
     }
@@ -578,5 +652,9 @@ button {
 @media (min-width: 701px) and (max-width: 1000px) {
     .admin-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }

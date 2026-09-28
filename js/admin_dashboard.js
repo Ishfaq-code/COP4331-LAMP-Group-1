@@ -2,6 +2,8 @@ import { clearCookie } from "./utility.js";
 
 const usersById = new Map();
 let messageTimeout;
+let userStatusChart;
+let userRolesChart;
 
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("logoutButton").addEventListener("click", () => {
@@ -32,7 +34,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
     fetchUsers();
     fetchContacts();
+    fetchStats();
 });
+
+async function fetchStats() {
+    try {
+        const response = await fetch("api/admin/get_stats.php", {
+            headers: getAuthHeaders()
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || "Failed to fetch dashboard statistics");
+
+        const stats = result.data;
+        if (!stats || typeof stats !== "object") throw new Error("Dashboard statistics were unavailable.");
+
+        document.getElementById("totalUsersStat").textContent = stats.totalUsers;
+        document.getElementById("totalContactsStat").textContent = stats.totalContacts;
+        document.getElementById("activeUsersStat").textContent = stats.activeUsers;
+        document.getElementById("suspendedUsersStat").textContent = stats.suspendedUsers;
+        document.getElementById("adminsStat").textContent = stats.admins;
+
+        if (typeof window.Chart !== "function") throw new Error("Charts could not be loaded.");
+        const chartTextColor = "#e0e0e0";
+        const statusData = [Number(stats.activeUsers), Number(stats.suspendedUsers)];
+        const roleData = [Number(stats.admins), Math.max(0, Number(stats.totalUsers) - Number(stats.admins))];
+
+        if (userStatusChart) {
+            userStatusChart.data.datasets[0].data = statusData;
+            userStatusChart.update();
+        } else {
+            userStatusChart = new Chart(document.getElementById("userStatusChart"), {
+                type: "doughnut",
+                data: { labels: ["Active", "Suspended"], datasets: [{ data: statusData, backgroundColor: ["#d4af37", "#d9534f"], borderColor: "#101010", borderWidth: 3 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: "bottom", labels: { color: chartTextColor, padding: 18 } } } }
+            });
+        }
+
+        if (userRolesChart) {
+            userRolesChart.data.datasets[0].data = roleData;
+            userRolesChart.update();
+        } else {
+            userRolesChart = new Chart(document.getElementById("userRolesChart"), {
+                type: "bar",
+                data: { labels: ["Administrators", "Users"], datasets: [{ label: "Accounts", data: roleData, backgroundColor: ["#d4af37", "#9f7f19"], borderRadius: 7 }] },
+                options: { responsive: true, maintainAspectRatio: false, scales: { x: { ticks: { color: chartTextColor }, grid: { display: false } }, y: { beginAtZero: true, ticks: { color: chartTextColor, precision: 0 }, grid: { color: "rgba(255,255,255,0.08)" } } }, plugins: { legend: { display: false } } }
+            });
+        }
+    } catch (error) {
+        showMessage(error.message, true);
+    }
+}
 
 function showMessage(text, isError = false) {
     const msgBox = document.getElementById("statusMessage");
@@ -165,7 +216,7 @@ async function createUser(event) {
 
         showMessage("User created successfully!");
         document.getElementById("createUserForm").reset();
-        await fetchUsers();
+        await Promise.all([fetchUsers(), fetchStats()]);
     } catch (error) {
         showMessage(error.message, true);
     }
@@ -196,7 +247,7 @@ async function suspendUser(event) {
 
         showMessage(`Account ${newActiveStatus ? "unsuspended" : "suspended"} successfully!`);
         closeAdminModal("suspendUserModal");
-        await fetchUsers();
+        await Promise.all([fetchUsers(), fetchStats()]);
     } catch (error) {
         showModalMessage("suspendActionMessage", error.message);
     }
