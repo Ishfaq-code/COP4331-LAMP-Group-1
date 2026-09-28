@@ -27,7 +27,7 @@ if (!is_array($data)) {
 try{
     $db = getDB();
     //Prepares MySQL query
-    $stmt = $db->prepare('UPDATE contacts SET FirstName = :FirstName, LastName = :LastName, EmailAddress = :EmailAddress, PhoneNumber = :PhoneNumber, DateUpdated = NOW() WHERE ID = :ID AND UserID = :UserID');
+    $stmt = $db->prepare('UPDATE Contacts SET FirstName = :FirstName, LastName = :LastName, EmailAddress = :EmailAddress, PhoneNumber = :PhoneNumber, DateUpdated = NOW() WHERE ID = :ID AND UserID = :UserID');
 
     $stmt->execute([':FirstName' => $data['FirstName'], ':LastName' => $data['LastName'], ':EmailAddress' => $data['EmailAddress'], ':PhoneNumber' => $data['PhoneNumber'] ?? null, ':ID' => $data['ID'], ':UserID' => $userId]);
 

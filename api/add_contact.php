@@ -39,7 +39,7 @@ try{
     $db = getDB();
 
     //Prepares MySQL query
-    $query = $db->prepare("INSERT INTO contacts (FirstName,LastName,EmailAddress,PhoneNumber,DateCreated,UserID) VALUES (:firstName, :lastName, :email, :phone, NOW(), :userId)");
+    $query = $db->prepare("INSERT INTO Contacts (FirstName,LastName,EmailAddress,PhoneNumber,DateCreated,UserID) VALUES (:firstName, :lastName, :email, :phone, NOW(), :userId)");
     $query->execute([':firstName' => $firstName, ':lastName' => $lastName, ':email' => $email, ':phone' => $phone, ':userId' => $userId]);
 
     $contactId = $db->lastInsertId();

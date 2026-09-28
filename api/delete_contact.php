@@ -30,7 +30,7 @@ try{
     $db = getDB();
 
     //Prepares MySQL query
-    $query = $db->prepare("DELETE FROM contacts WHERE ID = :id AND UserID = :userId");
+    $query = $db->prepare("DELETE FROM Contacts WHERE ID = :id AND UserID = :userId");
     $query->execute([':id' => $id, ':userId' => $userId]);
 
     //Checks if Contact was deleted
