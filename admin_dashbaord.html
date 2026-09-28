@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link href="css/admin.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
     <script type="module" src="js/admin_dashboard.js" defer></script>
 </head>
 <body>
@@ -24,6 +25,26 @@
         </div>
 
         <div id="statusMessage" class="status-msg" hidden></div>
+
+        <section class="card stats-section mb-4" aria-labelledby="statsTitle">
+            <div class="stats-grid" aria-live="polite">
+                <div class="stat-card"><span class="stat-label">Total Users</span><strong id="totalUsersStat" class="stat-value">—</strong></div>
+                <div class="stat-card"><span class="stat-label">Total Contacts</span><strong id="totalContactsStat" class="stat-value">—</strong></div>
+                <div class="stat-card"><span class="stat-label">Active Users</span><strong id="activeUsersStat" class="stat-value">—</strong></div>
+                <div class="stat-card"><span class="stat-label">Suspended Users</span><strong id="suspendedUsersStat" class="stat-value">—</strong></div>
+                <div class="stat-card"><span class="stat-label">Administrators</span><strong id="adminsStat" class="stat-value">—</strong></div>
+            </div>
+            <div class="charts-grid">
+                <div class="chart-panel">
+                    <h3 class="chart-title">Account Status</h3>
+                    <div class="chart-container"><canvas id="userStatusChart" role="img" aria-label="Doughnut chart of active and suspended accounts"></canvas></div>
+                </div>
+                <div class="chart-panel">
+                    <h3 class="chart-title">User Roles</h3>
+                    <div class="chart-container"><canvas id="userRolesChart" role="img" aria-label="Bar chart comparing administrator and non-administrator accounts"></canvas></div>
+                </div>
+            </div>
+        </section>
 
         <!-- User Management Section -->
         <div class="card mb-4">
