@@ -13,7 +13,12 @@
       min-height: 100vh;
       padding: 20px;
     }
-
+      .login-logo {
+        display: block;
+        max-width: 80px;      /* Adjust width as needed */
+        height: auto;         /* Maintains aspect ratio */
+        margin: 0 auto 16px;  /* Centers horizontally and adds bottom spacing */
+      }
     .login-card {
       background: #141414;
       padding: 40px;
@@ -31,7 +36,7 @@
       text-align: center;
       margin-bottom: 8px;
       font-size: 28px;
-      color: #D4AF37;
+      color: #FFC83B;
     }
 
     .login-card p.subtitle {
@@ -72,11 +77,11 @@
       width: 100%;
       padding: 12px;
       background-color: #D4AF37;
-      color: #ffffff;
+      color: #121212;
       border: none;
       border-radius: 6px;
       font-size: 16px;
-      font-weight: 600;
+      font-weight: bold;
       cursor: pointer;
       transition: background-color 0.2s ease;
     }
