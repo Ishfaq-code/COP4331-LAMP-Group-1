@@ -13,7 +13,12 @@
       min-height: 100vh;
       padding: 20px;
     }
-
+    .register-logo {
+        display: block;
+        max-width: 80px;      /* Adjust width as needed */
+        height: auto;         /* Maintains aspect ratio */
+        margin: 0 auto 16px;  /* Centers horizontally and adds bottom spacing */
+      }
     .register-card {
       background: #141414;
       padding: 40px;
@@ -85,7 +90,7 @@
       width: 100%;
       padding: 12px;
       background-color: #D4AF37;
-      color: #ffffff;
+      color: #121212;
       border: none;
       border-radius: 6px;
       font-size: 16px;
@@ -102,11 +107,11 @@
       text-align: center;
       margin-top: 20px;
       font-size: 14px;
-      color: #666666;
+      color: #e0e0e0;
     }
 
     .login-link a {
-      color: #D4AF37;
+      color: #ffc83b;
       text-decoration: none;
       font-weight: 600;
     }
