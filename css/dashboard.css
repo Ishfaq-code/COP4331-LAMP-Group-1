@@ -270,14 +270,14 @@ button {
         0 0 0 2px rgba(212, 175, 55, 0.12);
 }
 .contacts-list {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     align-items: stretch;
     gap: 18px;
 }
 .contact-circle {
     position: relative;
-    width: 250px;
+    width: 100%;
     min-height: 190px;
     display: flex;
     flex-direction: column;
@@ -528,7 +528,7 @@ button {
         flex-direction: column;
     }
     .contacts-list {
-        justify-content: center;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 @media (max-width: 430px) {
@@ -541,6 +541,9 @@ button {
     .contact-circle {
         width: 100%;
         min-height: 160px;
+    }
+    .contacts-list {
+        grid-template-columns: minmax(0, 1fr);
     }
     .btn {
         font-size: 12px;
