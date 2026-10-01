@@ -4,6 +4,10 @@ const usersById = new Map();
 let messageTimeout;
 let userStatusChart;
 let userRolesChart;
+let usersPage = 1;
+let usersTotalPages = 1;
+let adminContactsPage = 1;
+let adminContactsTotalPages = 1;
 
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("logoutButton").addEventListener("click", () => {
@@ -11,8 +15,18 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "index.html";
     });
 
-    document.getElementById("searchUsersButton").addEventListener("click", fetchUsers);
-    document.getElementById("searchContactsButton").addEventListener("click", fetchContacts);
+    document.getElementById("searchUsersButton").addEventListener("click", () => {
+        usersPage = 1;
+        fetchUsers();
+    });
+    document.getElementById("searchContactsButton").addEventListener("click", () => {
+        adminContactsPage = 1;
+        fetchContacts();
+    });
+    document.getElementById("previousUsersPage").addEventListener("click", () => changeAdminPage("users", -1));
+    document.getElementById("nextUsersPage").addEventListener("click", () => changeAdminPage("users", 1));
+    document.getElementById("previousAdminContactsPage").addEventListener("click", () => changeAdminPage("contacts", -1));
+    document.getElementById("nextAdminContactsPage").addEventListener("click", () => changeAdminPage("contacts", 1));
     document.getElementById("createUserForm").addEventListener("submit", createUser);
     document.getElementById("suspendForm").addEventListener("submit", suspendUser);
     document.getElementById("resetPasswordForm").addEventListener("submit", resetPassword);
@@ -113,6 +127,7 @@ async function fetchUsers() {
     if (search) params.append("search", search);
     if (roleFilter !== "all") params.append("isAdmin", roleFilter === "admin" ? "true" : "false");
     if (statusFilter !== "all") params.append("isActive", statusFilter === "active" ? "true" : "false");
+    params.append("page", String(usersPage));
 
     try {
         const response = await fetch(`api/admin/get_users.php?${params.toString()}`, {
@@ -122,6 +137,12 @@ async function fetchUsers() {
         if (!response.ok) throw new Error(result.message || "Failed to fetch users");
 
         const tbody = document.getElementById("usersTableBody");
+        usersTotalPages = result.pagination?.totalPages || 1;
+        if (usersPage > usersTotalPages) {
+            usersPage = usersTotalPages;
+            return fetchUsers();
+        }
+        updateAdminPagination("users", result.pagination);
         tbody.replaceChildren();
         usersById.clear();
 
@@ -160,6 +181,7 @@ async function fetchContacts() {
 
     if (search) params.append("search", search);
     if (userId) params.append("userId", userId);
+    params.append("page", String(adminContactsPage));
 
     try {
         const response = await fetch(`api/admin/get_contacts.php?${params.toString()}`, {
@@ -169,6 +191,12 @@ async function fetchContacts() {
         if (!response.ok) throw new Error(result.message || "Failed to fetch contacts");
 
         const tbody = document.getElementById("contactsTableBody");
+        adminContactsTotalPages = result.pagination?.totalPages || 1;
+        if (adminContactsPage > adminContactsTotalPages) {
+            adminContactsPage = adminContactsTotalPages;
+            return fetchContacts();
+        }
+        updateAdminPagination("contacts", result.pagination);
         tbody.replaceChildren();
         if (!Array.isArray(result.data) || result.data.length === 0) {
             tbody.innerHTML = "<tr><td colspan='6'>No contacts found.</td></tr>";
@@ -189,6 +217,36 @@ async function fetchContacts() {
     } catch (error) {
         showMessage(error.message, true);
     }
+}
+
+function changeAdminPage(table, direction) {
+    if (table === "users") {
+        const nextPage = usersPage + direction;
+        if (nextPage < 1 || nextPage > usersTotalPages) return;
+        usersPage = nextPage;
+        fetchUsers();
+        return;
+    }
+
+    const nextPage = adminContactsPage + direction;
+    if (nextPage < 1 || nextPage > adminContactsTotalPages) return;
+    adminContactsPage = nextPage;
+    fetchContacts();
+}
+
+function updateAdminPagination(table, pagination = {}) {
+    const isUsers = table === "users";
+    const page = isUsers ? usersPage : adminContactsPage;
+    const totalPages = pagination.totalPages || 1;
+    const previousButton = document.getElementById(isUsers ? "previousUsersPage" : "previousAdminContactsPage");
+    const nextButton = document.getElementById(isUsers ? "nextUsersPage" : "nextAdminContactsPage");
+    const pageInfo = document.getElementById(isUsers ? "usersPageInfo" : "adminContactsPageInfo");
+
+    if (isUsers) usersTotalPages = totalPages;
+    else adminContactsTotalPages = totalPages;
+    pageInfo.textContent = `Page ${page} of ${totalPages}`;
+    previousButton.disabled = page <= 1;
+    nextButton.disabled = page >= totalPages;
 }
 
 async function createUser(event) {

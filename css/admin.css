@@ -263,6 +263,22 @@ button {
     scrollbar-color: var(--gold-dark) var(--black-input);
 }
 
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 16px;
+    color: var(--gray);
+    font-size: 13px;
+}
+
+.pagination-controls button:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+    transform: none;
+}
+
 .data-table {
     width: 100%;
     min-width: 680px;

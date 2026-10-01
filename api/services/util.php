@@ -8,12 +8,16 @@ header('Access-Control-Allow-Methods: POST, GET, PUT, DELETE');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Content-Type: application/json');
 
-function response(int $statusCode, $msg, $data){
+function response(int $statusCode, $msg, $data, ?array $pagination = null){
     $response = [
         "statusCode" => $statusCode,
         "message" => $msg,
         "data" => $data
     ];
+
+    if ($pagination !== null) {
+        $response["pagination"] = $pagination;
+    }
 
     echo json_encode($response);
     exit();
