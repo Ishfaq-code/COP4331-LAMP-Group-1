@@ -11,11 +11,8 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "index.html";
     });
 
-    document.getElementById("userSearchInput").addEventListener("input", fetchUsers);
-    document.getElementById("adminFilter").addEventListener("change", fetchUsers);
-    document.getElementById("activeFilter").addEventListener("change", fetchUsers);
-    document.getElementById("contactSearchInput").addEventListener("input", fetchContacts);
-    document.getElementById("userIdFilter").addEventListener("input", fetchContacts);
+    document.getElementById("searchUsersButton").addEventListener("click", fetchUsers);
+    document.getElementById("searchContactsButton").addEventListener("click", fetchContacts);
     document.getElementById("createUserForm").addEventListener("submit", createUser);
     document.getElementById("suspendForm").addEventListener("submit", suspendUser);
     document.getElementById("resetPasswordForm").addEventListener("submit", resetPassword);
