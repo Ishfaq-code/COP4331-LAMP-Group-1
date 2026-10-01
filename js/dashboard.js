@@ -4,6 +4,8 @@ let alertTimeout
 let pendingDeleteId = null
 let editingContactId = null
 const contactCache = new Map()
+let contactsPage = 1
+let contactsTotalPages = 1
 
 document.addEventListener("DOMContentLoaded", async function () {
     const user = readCookie()
@@ -12,6 +14,19 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     await refreshContacts()
+
+    document.getElementById('previousContactsPage').addEventListener('click', () => {
+        if (contactsPage > 1) {
+            contactsPage--
+            refreshContacts()
+        }
+    })
+    document.getElementById('nextContactsPage').addEventListener('click', () => {
+        if (contactsPage < contactsTotalPages) {
+            contactsPage++
+            refreshContacts()
+        }
+    })
 
     document.addEventListener('click', function (event) {
         if (event.target.classList.contains('modal')) {
@@ -70,7 +85,7 @@ window.doLogout = function () {
 
 async function fetchUsers(userId, searchTerm = '') {
     const alertBox = document.getElementById('alertMessage')
-    const params = new URLSearchParams({ search: searchTerm })
+    const params = new URLSearchParams({ search: searchTerm, page: String(contactsPage) })
 
     alertBox.style.display = 'none'
 
@@ -86,6 +101,12 @@ async function fetchUsers(userId, searchTerm = '') {
 
         if (response.status === 200) {
             renderContacts(Array.isArray(data.data) ? data.data : [])
+            contactsTotalPages = data.pagination?.totalPages || 1
+            if (contactsPage > contactsTotalPages) {
+                contactsPage = contactsTotalPages
+                return fetchUsers(userId, searchTerm)
+            }
+            updateContactsPagination(data.pagination)
             return data
         }
 
@@ -99,10 +120,18 @@ async function fetchUsers(userId, searchTerm = '') {
     }
 }
 
-async function refreshContacts() {
+async function refreshContacts(resetPage = false) {
     const user = readCookie()
     const searchTerm = document.getElementById('searchText').value.trim()
+    if (resetPage) contactsPage = 1
     return fetchUsers(user.userId, searchTerm)
+}
+
+function updateContactsPagination(pagination = {}) {
+    contactsTotalPages = pagination.totalPages || 1
+    document.getElementById('contactsPageInfo').textContent = `Page ${contactsPage} of ${contactsTotalPages}`
+    document.getElementById('previousContactsPage').disabled = contactsPage <= 1
+    document.getElementById('nextContactsPage').disabled = contactsPage >= contactsTotalPages
 }
 
 function renderContacts(contacts) {
@@ -279,7 +308,7 @@ window.addContactMock = async function () {
     return addContact(user.userId, firstName, lastName, email, phoneNumber)
 }
 
-window.searchContacts = refreshContacts
+window.searchContacts = () => refreshContacts(true)
 
 window.promptDeleteContact = function (contactId, contactName) {
     pendingDeleteId = contactId

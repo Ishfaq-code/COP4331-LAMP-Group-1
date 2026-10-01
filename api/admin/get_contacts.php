@@ -28,6 +28,13 @@ try {
 
     $conditions = [];
     $params = [];
+    $page = filter_var($_GET["page"] ?? 1, FILTER_VALIDATE_INT);
+    if ($page === false || $page < 1) {
+        http_response_code(400);
+        response(400, "The page must be a positive integer.", null);
+    }
+    $pageSize = 9;
+    $offset = ($page - 1) * $pageSize;
 
     $search = trim((string) ($_GET["search"] ?? ""));
     if ($search !== "") {
@@ -49,17 +56,29 @@ try {
         $params[":contactOwnerId"] = $contactOwnerId;
     }
 
-    $sql = "SELECT ID, FirstName, LastName, EmailAddress, PhoneNumber, UserID FROM Contacts";
-    if ($conditions) {
-        $sql .= " WHERE " . implode(" AND ", $conditions);
-    }
-    $sql .= " ORDER BY ID";
+    $where = $conditions ? " WHERE " . implode(" AND ", $conditions) : "";
+    $countQuery = $db->prepare("SELECT COUNT(*) FROM Contacts" . $where);
+    $countQuery->execute($params);
+    $totalItems = (int) $countQuery->fetchColumn();
+
+    $sql = "SELECT ID, FirstName, LastName, EmailAddress, PhoneNumber, UserID FROM Contacts" . $where;
+    $sql .= " ORDER BY ID LIMIT :limit OFFSET :offset";
 
     $query = $db->prepare($sql);
-    $query->execute($params);
+    foreach ($params as $key => $value) {
+        $query->bindValue($key, $value);
+    }
+    $query->bindValue(":limit", $pageSize, PDO::PARAM_INT);
+    $query->bindValue(":offset", $offset, PDO::PARAM_INT);
+    $query->execute();
 
     http_response_code(200);
-    response(200, "Contacts retrieved successfully.", $query->fetchAll());
+    response(200, "Contacts retrieved successfully.", $query->fetchAll(), [
+        "page" => $page,
+        "pageSize" => $pageSize,
+        "totalItems" => $totalItems,
+        "totalPages" => max(1, (int) ceil($totalItems / $pageSize))
+    ]);
 } catch (PDOException $e) {
     error_log($e->getMessage());
     http_response_code(500);

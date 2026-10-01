@@ -275,6 +275,20 @@ button {
     align-items: stretch;
     gap: 18px;
 }
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 20px;
+    color: var(--gray);
+    font-size: 13px;
+}
+.pagination-controls button:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+    transform: none;
+}
 .contact-circle {
     position: relative;
     width: 100%;
